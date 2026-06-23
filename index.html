@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Bonnie Official TH</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <div class="spinner-text">กำลังโหลด...</div>
+  </div>
+  <div class="top-banner" id="banner-box">
+    <div class="banner-dots" id="banner-dots"></div>
+  </div>
+  <nav class="navbar">
+    <span class="nav-logo" id="nav-logo">✿ Bonnie Official TH</span>
+  </nav>
+  <div class="main">
+    <aside class="sidebar">
+      <a href="#" onclick="showPage('home',this)">HOME</a>
+      <a href="#" onclick="showPage('youtube',this)">YOUTUBE CHANNEL</a>
+      <a href="#" onclick="showPage('contact',this)">CONTACT US</a>
+    </aside>
+    <div class="content">
+      <div id="page-home">
+        <div class="tabs-row">
+          <div class="tab active" onclick="switchTab('profile',this)">PROFILE</div>
+          <div class="tab" onclick="switchTab('works',this)">SCHEDULE</div>
+          <div class="tab" onclick="switchTab('news',this)">NEWS</div>
+          <div class="tab" onclick="switchTab('filmography',this)">FILMOGRAPHY</div>
+          <div class="tab" onclick="switchTab('awards',this)">AWARDS</div>
+        </div>
+        <div class="tab-content active" id="tab-profile">
+          <div class="profile-slider-wrap">
+            <button class="profile-nav left" onclick="scrollProfile(-1)">&#8249;</button>
+            <div class="profile-slider" id="profile-slider"></div>
+            <button class="profile-nav right" onclick="scrollProfile(1)">&#8250;</button>
+          </div>
+          <p class="bio-text" id="bio-text"></p>
+          <div class="social-section">
+            <div class="social-grid" id="social-grid">
+              <div><div class="s-name">IG</div><div class="social-thumb-wrap" style="background:#ddd"></div></div>
+              <div><div class="s-name">X</div><div class="social-thumb-wrap" style="background:#ddd"></div></div>
+              <div><div class="s-name">TIKTOK</div><div class="social-thumb-wrap" style="background:#ddd"></div></div>
+              <div><div class="s-name">WEIBO</div><div class="social-thumb-wrap" style="background:#ddd"></div></div>
+            </div>
+          </div>
+          <div class="yt-section">
+            <div class="yt-label">OFFICIAL VIDEO</div>
+            <div class="yt-grid" id="yt-grid">
+              <div class="yt-thumb" style="background:#ddd"></div>
+              <div class="yt-thumb" style="background:#ddd"></div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-works">
+          <div class="works-section">
+            <div class="works-cal-row">
+              <div class="works-cal-left">
+                <div class="calendar">
+                  <div class="cal-header">
+                    <button class="cal-nav" onclick="changeMonth(-1)">&#8249;</button>
+                    <select id="cal-month" onchange="renderCalendar()">
+                      <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
+                      <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
+                      <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
+                      <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
+                    </select>
+                    <select id="cal-year" onchange="renderCalendar()">
+                      <option selected>2025</option><option>2026</option>
+                    </select>
+                    <button class="cal-nav" onclick="changeMonth(1)">&#8250;</button>
+                  </div>
+                  <div class="cal-grid" id="cal-grid"></div>
+                </div>
+              </div>
+              <div class="works-cal-right"></div>
+            </div>
+            <div class="cal-popup-overlay" id="cal-popup-overlay" onclick="closePopup(event)">
+              <div class="cal-popup-box">
+                <div class="cal-popup-header">
+                  <div class="cal-popup-date" id="cal-popup-date"></div>
+                  <button class="cal-popup-close" onclick="closePopup()">&#x2715;</button>
+                </div>
+                <div id="cal-popup-list"></div>
+                <div class="cal-popup-notice">
+                  งดติดตามศิลปินนอกเวลางาน ห้ามดักรอศิลปินบริเวณห้องพักหรือลานจอดรถ และตึกสังกัด<br>
+                  <span>Please refrain from following the artists outside of work hours. Please do not wait for the artists near their residences, parking lots and company building.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content" id="tab-news">
+          <div id="news-list"><div class="loading">กำลังโหลด...</div></div>
+        </div>
+        <div class="tab-content" id="tab-filmography">
+          <div class="works-grid" id="works-grid"></div>
+        </div>
+        <div class="tab-content" id="tab-awards">
+          <div id="rewards-wrap">
+            <table class="rewards-table">
+              <thead><tr id="rewards-thead"><th>Award</th><th>Date</th></tr></thead>
+              <tbody id="rewards-list"><tr><td colspan="2" class="loading">กำลังโหลด...</td></tr></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div id="page-youtube" style="display:none">
+        <div class="yt-label">YOUTUBE</div>
+        <div class="yt-page-grid" id="yt-page-grid"><div class="loading">กำลังโหลด...</div></div>
+      </div>
+      <div id="page-contact" style="display:none">
+        <div class="contact-label">CONTACT US</div>
+        <div class="contact-list" id="contact-list"><div class="loading">กำลังโหลด...</div></div>
+      </div>
+    </div>
+  </div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
