@@ -55,7 +55,7 @@ async function loadConfig() {
   const hlc = cfg.highlight_color   || hc;
   const sc  = cfg.sidebar_color     || hc;
   const bh  = cfg.banner_height     || "200px";
-  const pr  = cfg.profile_ratio     || "210/297";
+  const pr  = cfg.profile_ratio     || "";
   const ss  = cfg.social_size       || "200px";
   const vr  = cfg.video_ratio       || "16/9";
   const sfs = cfg.sidebar_font_size || "";
@@ -109,7 +109,7 @@ async function loadConfig() {
     ".tab.active{color:" + tac + " !important;border-bottom-color:" + tac + " !important}",
     ".event-dot{background:" + hlc + "}",
     ".day.today .event-dot{background:#fff}",
-    ".profile-img{border-color:" + hc + " !important;aspect-ratio:" + pr + " !important}",
+    pr ? ".profile-img{border-color:" + hc + " !important;aspect-ratio:" + pr + " !important}" : ".profile-img{border-color:" + hc + " !important}",
     ".cal-grid .day.selected{outline-color:" + hc + "}",
     ".top-banner{height:" + bh + " !important}",
     ".top-banner img{height:100% !important}",
