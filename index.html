@@ -24,14 +24,15 @@
     <aside class="sidebar">
       <a href="#" onclick="showPage('home',this)">HOME</a>
       <a href="#" onclick="showPage('youtube',this)">YOUTUBE CHANNEL</a>
-      <a href="#" onclick="showPage('income-expense',this)">INCOME-EXPENSE</a>
       <a href="#" onclick="showPage('contact',this)">CONTACT US</a>
+      <a href="https://income-expenses-xi.vercel.app" target="_blank" rel="noopener noreferrer" onclick="showPage('income-expense',this)">INCOME-EXPENSE</a>
+      <a href="#" onclick="showPage('foodsupport',this)">FOODSUPPORT</a>
     </aside>
     <div class="content">
       <div id="page-home">
         <div class="tabs-row">
           <div class="tab active" onclick="switchTab('profile',this)">PROFILE</div>
-          <div class="tab" onclick="switchTab('filmography',this)">FILMOGRAPHY</div>
+          <div class="tab" onclick="switchTab('series',this)">SERIES</div>
           <div class="tab" onclick="switchTab('awards',this)">AWARDS</div>
         </div>
         <div class="tab-content active" id="tab-profile">
@@ -94,7 +95,7 @@
         <div class="tab-content" id="tab-news">
           <div id="news-list"><div class="loading">กำลังโหลด...</div></div>
         </div>
-        <div class="tab-content" id="tab-filmography">
+        <div class="tab-content" id="tab-series">
           <div class="works-grid" id="works-grid"></div>
         </div>
         <div class="tab-content" id="tab-awards">
@@ -116,6 +117,64 @@
       </div>
     </div>
   </div>
+
+      <!-- เริ่มโค้ด Footer -->
+    <footer class="custom-footer">
+        <div class="footer-container">
+            
+            <!-- คอลัมน์โซเชียลมีเดีย (ซ้ายสุด) -->
+            <div class="footer-socials">
+                <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+                <a href="#" aria-label="Instagram)"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+            </div>
+
+            <!-- คอลัมน์ USE CASES -->
+            <div class="footer-column">
+                <h3>Use Cases</h3>
+                <ul>
+                    <li><a href="#">UI design</a></li>
+                    <li><a href="#">UX design</a></li>
+                    <li><a href="#">Wireframing</a></li>
+                    <li><a href="#">Diagramming</a></li>
+                    <li><a href="#">Brainstorming</a></li>
+                    <li><a href="#">Online whiteboard</a></li>
+                    <li><a href="#">Team collaboration</a></li>
+                </ul>
+            </div>
+
+            <!-- คอลัมน์ EXPLORE -->
+            <div class="footer-column">
+                <h3>Explore</h3>
+                <ul>
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Prototyping</a></li>
+                    <li><a href="#">Development features</a></li>
+                    <li><a href="#">Design systems</a></li>
+                    <li><a href="#">Collaboration features</a></li>
+                    <li><a href="#">Design process</a></li>
+                    <li><a href="#">FigJam</a></li>
+                </ul>
+            </div>
+
+            <!-- คอลัมน์ RESOURCES -->
+            <div class="footer-column">
+                <h3>Resources</h3>
+                <ul>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Best practices</a></li>
+                    <li><a href="#">Colors</a></li>
+                    <li><a href="#">Color wheel</a></li>
+                    <li><a href="#">Support</a></li>
+                    <li><a href="#">Developers</a></li>
+                    <li><a href="#">Resource library</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </footer>
+    <!-- จบโค้ด Footer -->
 
 <script src="js/script.js"></script>
 </body>

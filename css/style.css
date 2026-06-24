@@ -202,7 +202,7 @@ body { font-family: sans-serif; background: #f5f5f5; min-height: 100vh; }
   .cal-grid .day-label { font-size: 10px; }
   .cal-header select { font-size: 11px; padding: 2px 4px; }
 
-  /* Works/Filmography */
+  /* Works/series */
   .works-grid { grid-template-columns: 1fr; gap: 8px; }
 
   /* Contact */
@@ -232,4 +232,96 @@ body { font-family: sans-serif; background: #f5f5f5; min-height: 100vh; }
   .cal-grid .day { font-size: 11px; padding: 5px 1px; }
   .contact-list { grid-template-columns: 1fr; }
 }
+
+    /* ตั้งค่าพื้นฐาน */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* ตกแต่ง Footer */
+        .custom-footer {
+            width: 100%;
+            background-color: #ffffff;
+            padding: 60px 40px;
+            border-top: 0px solid #c9c9c9; /* เส้นขอบด้านบนสีม่วงตามรูป */
+        }
+
+        /* จัดเลย์เอาต์คอลัมน์ด้วย Flexbox */
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        /* ส่วนของไอคอนโซเชียลมีเดีย */
+        .footer-socials {
+            display: flex;
+            gap: 15px;
+            align-items: flex-start;
+        }
+
+        .footer-socials a {
+            color: #7B2CBF; /* สีม่วงของไอคอน */
+            font-size: 22px;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .footer-socials a:hover {
+            opacity: 0.7;
+        }
+
+        /* ส่วนของคอลัมน์เมนู */
+        .footer-column {
+            flex: 1;
+            min-width: 180px;
+        }
+
+        /* หัวข้อคอลัมน์ */
+        .footer-column h3 {
+            color: #7B2CBF; /* สีม่วงเข้ม */
+            font-size: 16px;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        /* รายการลิงก์ */
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-column ul li a {
+            color: #333333; /* สีตัวอักษรของลิงก์ */
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .footer-column ul li a:hover {
+            color: #7B2CBF; /* เปลี่ยนเป็นสีม่วงเมื่อชี้ */
+        }
+
+        /* รองรับหน้าจอมือถือ */
+        @media (max-width: 768px) {
+            .footer-container {
+                flex-direction: column;
+            }
+            .footer-socials {
+                margin-bottom: 20px;
+            }
+            
+        }
+
 
