@@ -21,8 +21,6 @@ function convertDriveUrl(url) {
   return url;
 }
 
-function applyStyle(el, styles) { if (el) Object.assign(el.style, styles); }
-
 async function loadConfig() {
   const rows = await fetchCSV(GID.config);
   const cfg = {};
@@ -34,149 +32,15 @@ async function loadConfig() {
     while (cfg["profile_img_" + i]) { imgs += '<img class="profile-img" src="' + convertDriveUrl(cfg["profile_img_" + i]) + '" alt="Profile ' + i + '">'; i++; }
     if (imgs) { slider.innerHTML = imgs; setTimeout(updateProfileNav, 100); slider.addEventListener("scroll", updateProfileNav, { passive: true }); }
     let isDown=false, startX=0, scrollLeft=0;
-    slider.addEventListener("mousedown", e => { isDown=true; startX=e.pageX-slider.offsetLeft; scrollLeft=slider.scrollLeft; slider.style.cursor="grabbing"; });
-    slider.addEventListener("mouseleave", () => { isDown=false; slider.style.cursor="grab"; });
-    slider.addEventListener("mouseup", () => { isDown=false; slider.style.cursor="grab"; });
+    slider.addEventListener("mousedown", e => { isDown=true; startX=e.pageX-slider.offsetLeft; scrollLeft=slider.scrollLeft; slider.classList.add("is-dragging"); });
+    slider.addEventListener("mouseleave", () => { isDown=false; slider.classList.remove("is-dragging"); });
+    slider.addEventListener("mouseup", () => { isDown=false; slider.classList.remove("is-dragging"); });
     slider.addEventListener("mousemove", e => { if (!isDown) return; e.preventDefault(); slider.scrollLeft=scrollLeft-(e.pageX-slider.offsetLeft-startX); });
   }
 
   if (cfg.bio) document.getElementById("bio-text").textContent = cfg.bio;
-  if (cfg.navbar_color) document.querySelector(".navbar").style.background = cfg.navbar_color;
   const logo = document.getElementById("nav-logo");
   if (cfg.site_name) { logo.textContent = cfg.site_name; document.title = cfg.site_name; }
-  if (cfg.site_name_size) logo.style.fontSize = cfg.site_name_size;
-  if (cfg.site_name_color) logo.style.color = cfg.site_name_color;
-  if (cfg.site_name_font) logo.style.fontFamily = cfg.site_name_font + ", sans-serif";
-  logo.style.fontStyle = (cfg.site_name_italic === "true") ? "italic" : "normal";
-
-  const hc  = cfg.heading_color     || "#7c3aed";
-  const tc  = cfg.tab_color         || "#888888";
-  const tac = cfg.tab_active_color  || hc;
-  const hlc = cfg.highlight_color   || hc;
-  const sc  = cfg.sidebar_color     || hc;
-  const bh  = cfg.banner_height     || "200px";
-  const pr  = cfg.profile_ratio     || "";
-  const ss  = cfg.social_size       || "200px";
-  const vr  = cfg.video_ratio       || "16/9";
-  const sfs = cfg.sidebar_font_size || "";
-  const fbc = cfg.follower_bar_color || "rgba(30,0,60,0.72)";
-  const rhc = cfg.rewards_header_color || hc;
-  const rhb = cfg.rewards_header_bg    || "";
-  const rf  = cfg.rewards_font         || "";
-  const rs  = cfg.rewards_size         || "";
-  const rc  = cfg.rewards_color        || "";
-
-  const vtf = cfg.video_title_font  || "";
-  const vts = cfg.video_title_size  || "";
-  const vtc = cfg.video_title_color || "";
-  const bf  = cfg.bio_font  || "";
-  const bs  = cfg.bio_size  || "";
-  const bc  = cfg.bio_color || "";
-  const nf  = cfg.notice_font  || "";
-  const ns  = cfg.notice_size  || "";
-  const nc  = cfg.notice_color || "";
-  const enf = cfg.event_name_font  || "";
-  const ens = cfg.event_name_size  || "";
-  const enc = cfg.event_name_color || "";
-  const erf = cfg.event_row_font  || "";
-  const ers = cfg.event_row_size  || "";
-  const erc = cfg.event_row_color || "";
-  const elf = cfg.event_label_font  || "";
-  const els = cfg.event_label_size  || "";
-  const elc = cfg.event_label_color || hc;
-  const pdf = cfg.popup_date_font    || "";
-  const pds = cfg.popup_date_size    || "";
-  const pdc = cfg.popup_date_color   || hc;
-  const pnf = cfg.popup_notice_font  || "";
-  const pns = cfg.popup_notice_size  || "";
-  const pnc = cfg.popup_notice_color || "";
-  const cpf = cfg.contact_platform_font  || "";
-  const cps = cfg.contact_platform_size  || "";
-  const cpc = cfg.contact_platform_color || "";
-  const chf = cfg.contact_handle_font    || "";
-  const chs = cfg.contact_handle_size    || "";
-  const chc = cfg.contact_handle_color   || "";
-
-  const old = document.getElementById("dynamic-config-style");
-  if (old) old.remove();
-  const ds = document.createElement("style");
-  ds.id = "dynamic-config-style";
-  const rhbFinal = rhb || (rhc + "18");
-  ds.textContent = [
-    ".cal-label,.yt-label,.s-name,.contact-label,.work-title{color:" + hc + "}",
-    ".sidebar a{color:" + sc + " !important;" + (sfs ? "font-size:" + sfs + " !important;" : "") + "}",
-    ".tab{color:" + tc + " !important}",
-    ".tab.active{color:" + tac + " !important;border-bottom-color:" + tac + " !important}",
-    ".event-dot{background:" + hlc + "}",
-    ".day.today .event-dot{background:#fff}",
-    pr ? ".profile-img{border-color:" + hc + " !important;aspect-ratio:" + pr + " !important}" : ".profile-img{border-color:" + hc + " !important}",
-    ".cal-grid .day.selected{outline-color:" + hc + "}",
-    ".top-banner{height:" + bh + " !important}",
-    ".top-banner img{height:100% !important}",
-    ".social-grid>div{width:" + ss + "}",
-    ".social-thumb-wrap{max-width:" + ss + "}",
-    ".yt-thumb{aspect-ratio:" + vr + " !important}",
-    ".yt-card img{aspect-ratio:" + vr + " !important}",
-    ".follower-bar{background:" + fbc + " !important}",
-    "table.rewards-table thead tr th{color:" + rhc + " !important;background:" + rhbFinal + " !important;border-bottom-color:" + rhc + "44 !important}",
-    rf  ? ".rewards-table{font-family:" + rf + ",sans-serif}" : "",
-    rs  ? ".rewards-table td,.rewards-table th{font-size:" + rs + " !important}" : "",
-    rc  ? ".rewards-table td{color:" + rc + " !important}" : "",
-    vtf ? ".yt-title,.yt-card-title{font-family:" + vtf + ",sans-serif}" : "",
-    vts ? ".yt-title,.yt-card-title{font-size:" + vts + " !important}" : "",
-    vtc ? ".yt-title,.yt-card-title{color:" + vtc + " !important}" : "",
-    bf  ? ".bio-text{font-family:" + bf + ",sans-serif}" : "",
-    bs  ? ".bio-text{font-size:" + bs + " !important}" : "",
-    bc  ? ".bio-text{color:" + bc + " !important}" : "",
-    nf  ? ".cal-notice{font-family:" + nf + ",sans-serif}" : "",
-    ns  ? ".cal-notice{font-size:" + ns + " !important}" : "",
-    nc  ? ".cal-notice{color:" + nc + " !important}" : "",
-    enf ? ".event-item .e-name{font-family:" + enf + ",sans-serif}" : "",
-    ens ? ".event-item .e-name{font-size:" + ens + " !important}" : "",
-    enc ? ".event-item .e-name{color:" + enc + " !important}" : "",
-    erf ? ".event-item .e-row{font-family:" + erf + ",sans-serif}" : "",
-    ers ? ".event-item .e-row{font-size:" + ers + " !important}" : "",
-    erc ? ".event-item .e-row{color:" + erc + " !important}" : "",
-    ".event-item .e-row span{color:" + elc + " !important;" + (elf ? "font-family:" + elf + ",sans-serif;" : "") + (els ? "font-size:" + els + ";" : "") + "}",
-    ".cal-popup-date{color:" + pdc + " !important;" + (pdf ? "font-family:" + pdf + ",sans-serif;" : "") + (pds ? "font-size:" + pds + ";" : "") + "}",
-    pnf ? ".cal-popup-notice{font-family:" + pnf + ",sans-serif}" : "",
-    pns ? ".cal-popup-notice{font-size:" + pns + " !important}" : "",
-    pnc ? ".cal-popup-notice{color:" + pnc + " !important}" : "",
-    cpf ? ".contact-platform{font-family:" + cpf + ",sans-serif}" : "",
-    cps ? ".contact-platform{font-size:" + cps + " !important}" : "",
-    cpc ? ".contact-platform{color:" + cpc + " !important;opacity:1}" : "",
-    chf ? ".contact-handle{font-family:" + chf + ",sans-serif}" : "",
-    chs ? ".contact-handle{font-size:" + chs + " !important}" : "",
-    chc ? ".contact-handle{color:" + chc + " !important}" : "",
-  ].filter(Boolean).join("\n");
-  document.head.appendChild(ds);
-
-  if (cfg.font_family) {
-    const sysF = ["Arial","Helvetica","Georgia","sans-serif","serif","monospace","Tahoma","Verdana"];
-    if (!sysF.includes(cfg.font_family)) { const l=document.createElement("link"); l.rel="stylesheet"; l.href="https://fonts.googleapis.com/css2?family="+cfg.font_family.replace(/ /g,"+")+":wght@400;700&display=swap"; document.head.appendChild(l); }
-    document.body.style.fontFamily = cfg.font_family + ", sans-serif";
-  }
-  if (cfg.font_size) document.body.style.fontSize = cfg.font_size;
-  if (cfg.font_color) document.body.style.color = cfg.font_color;
-
-  window._pageFonts = {
-    home:    { font: cfg.font_home    || cfg.font_family || "", size: cfg.font_size_home    || cfg.font_size || "", color: cfg.font_color_home    || cfg.font_color || "" },
-    youtube: { font: cfg.font_youtube || cfg.font_family || "", size: cfg.font_size_youtube || cfg.font_size || "", color: cfg.font_color_youtube || cfg.font_color || "" },
-    contact: { font: cfg.font_contact || cfg.font_family || "", size: cfg.font_size_contact || cfg.font_size || "", color: cfg.font_color_contact || cfg.font_color || "" }
-  };
-
-  const allFonts = [...new Set(Object.values(window._pageFonts).map(p => p.font).filter(Boolean))];
-  const sysF2 = ["Arial","Helvetica","Georgia","sans-serif","serif","monospace","Tahoma","Verdana"];
-  const fontPromises = allFonts.filter(f => !sysF2.includes(f)).map(f => new Promise(resolve => {
-    const l = document.createElement("link");
-    l.rel = "stylesheet";
-    l.href = "https://fonts.googleapis.com/css2?family=" + f.replace(/ /g, "+") + ":wght@400;700&display=swap";
-    l.onload = resolve; l.onerror = resolve;
-    document.head.appendChild(l);
-    setTimeout(resolve, 1500);
-  }));
-  await Promise.all(fontPromises);
-  applyPageFont("home");
 }
 
 async function loadSlider() {
@@ -227,7 +91,7 @@ async function loadNews() {
   const rows = await fetchCSV(GID.news);
   const list = document.getElementById("news-list");
   if (!rows.length) { list.innerHTML = "<div class='loading'>ยังไม่มีข้อมูล</div>"; return; }
-  list.innerHTML = rows.map(r => '<div class="news-item"><div class="news-date">'+r[0]+'</div><div class="news-title"><a href="'+(r[2]||'#')+'" target="_blank" style="color:inherit;text-decoration:none">'+r[1]+'</a></div></div>').join("");
+  list.innerHTML = rows.map(r => '<div class="news-item"><div class="news-date">'+r[0]+'</div><div class="news-title"><a href="'+(r[2]||'#')+'" target="_blank">'+r[1]+'</a></div></div>').join("");
 }
 
 async function loadSocials() {
@@ -251,7 +115,7 @@ async function loadContact() {
   const rows = await fetchCSV(GID.contact);
   const list = document.getElementById("contact-list");
   if (!rows.length||!list) return;
-  list.innerHTML = rows.map(r => { const p=r[0]||"",h=r[1]||"",u=r[2]||"#",c=r[3]||"#7c3aed",ic=r[4]||p.substring(0,2).toUpperCase(); return '<a href="'+u+'" target="_blank" class="contact-item"><div class="contact-icon" style="background:'+c+'">'+ic+'</div><div class="contact-info"><div class="contact-platform">'+p+'</div><div class="contact-handle">'+h+'</div></div></a>'; }).join("");
+  list.innerHTML = rows.map(r => { const p=r[0]||"",h=r[1]||"",u=r[2]||"#",ic=r[4]||p.substring(0,2).toUpperCase(); return '<a href="'+u+'" target="_blank" class="contact-item"><div class="contact-icon">'+ic+'</div><div class="contact-info"><div class="contact-platform">'+p+'</div><div class="contact-handle">'+h+'</div></div></a>'; }).join("");
 }
 
 function scrollProfile(dir) {
@@ -263,19 +127,14 @@ function scrollProfile(dir) {
   s.scrollBy({left:dir*visibleCount*(w+gap),behavior:"smooth"}); setTimeout(updateProfileNav,350);
 }
 
-function applyPageFont(page) {
-  if (!window._pageFonts) return;
-  const p = window._pageFonts[page]; if (!p) return;
-  if (p.font) document.body.style.fontFamily = p.font + ", sans-serif";
-  if (p.size) document.body.style.fontSize = p.size;
-  if (p.color) document.body.style.color = p.color;
-}
-
 function showPage(page, el) {
-  ["home","youtube","contact"].forEach(pg => { document.getElementById("page-"+pg).style.display = pg===page ? "block" : "none"; });
+  const target = document.getElementById("page-" + page);
+  if (!target) return;
+  document.querySelectorAll('[id^="page-"]').forEach(section => {
+    section.hidden = section.id !== "page-" + page;
+  });
   document.querySelectorAll(".sidebar a").forEach(a => a.classList.remove("active-menu"));
   if (el) el.classList.add("active-menu");
-  applyPageFont(page);
 }
 
 function getYoutubeThumbnail(url) {
@@ -297,7 +156,7 @@ let scheduleEvents = [];
 
 async function loadSchedule() {
   const rows = await fetchCSV(GID.schedule);
-  scheduleEvents = rows.filter(r => r[0]).map(r => ({ date:r[0],title:r[1]||'',location:(r[2]==='-'?'':r[2])||'',time:(r[3]==='-'?'':r[3])||'',livestream:(r[4]==='-'?'':r[4])||'',with:(r[5]==='-'?'':r[5])||'',note:(r[6]==='-'?'':r[6])||'',note_color:(r[7]==='-'?'':r[7])||'' }));
+  scheduleEvents = rows.filter(r => r[0]).map(r => ({ date:r[0],title:r[1]||'',location:(r[2]==='-'?'':r[2])||'',time:(r[3]==='-'?'':r[3])||'',livestream:(r[4]==='-'?'':r[4])||'',with:(r[5]==='-'?'':r[5])||'',note:(r[6]==='-'?'':r[6])||'' }));
   scheduleDates = [...new Set(scheduleEvents.map(e => e.date))];
   renderCalendar();
 }
@@ -307,11 +166,11 @@ async function loadRewards() {
   const tbody = document.getElementById("rewards-list");
   const thead = document.getElementById("rewards-thead");
   if (!tbody) return;
-  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#aaa;padding:12px">ยังไม่มีข้อมูล</td></tr>'; return; }
+  if (!rows.length) { tbody.innerHTML = '<tr><td colspan="3" class="rewards-empty">ยังไม่มีข้อมูล</td></tr>'; return; }
   const hasEvent = rows.some(r => r[2]);
   if (thead && hasEvent) thead.innerHTML = '<th>Award</th><th>Event</th><th>Date</th>';
   else if (thead) thead.innerHTML = '<th>Award</th><th>Date</th>';
-  tbody.innerHTML = rows.map(r => hasEvent ? '<tr><td>'+(r[0]||'')+'</td><td>'+(r[2]||'')+'</td><td style="white-space:nowrap">'+(r[1]||'')+'</td></tr>' : '<tr><td>'+(r[0]||'')+'</td><td style="white-space:nowrap">'+(r[1]||'')+'</td></tr>').join("");
+  tbody.innerHTML = rows.map(r => hasEvent ? '<tr><td>'+(r[0]||'')+'</td><td>'+(r[2]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>' : '<tr><td>'+(r[0]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>').join("");
 }
 
 function closePopup(e) { if (!e || e.target===document.getElementById("cal-popup-overlay")) document.getElementById("cal-popup-overlay").classList.remove("active"); }
@@ -325,7 +184,7 @@ function showEvents(dateStr) {
   if (dateTitle) dateTitle.textContent = d + " " + months[parseInt(m)-1] + " " + y;
   list.innerHTML = !events.length
     ? '<div class="event-empty">ไม่มีงานในวันนี้<br><span>No events scheduled for this day.</span></div>'
-    : events.map(e => '<div class="event-item"><div class="e-name">'+e.title+'</div>'+(e.location?'<div class="e-row"><span>Location :</span>'+e.location+'</div>':'')+(e.time?'<div class="e-row"><span>Time :</span>'+e.time+'</div>':'')+(e.livestream?'<div class="e-row"><span>Live Streaming :</span><a href="'+e.livestream+'" target="_blank" style="color:#7c3aed">'+e.livestream+'</a></div>':'')+(e.with?'<div class="e-row"><span>With :</span>'+e.with+'</div>':'')+(e.note?'<div class="e-row"><span>Note :</span><span style="'+(e.note_color?'color:'+e.note_color:'')+'">'+e.note+'</span></div>':'')+'</div>').join("");
+    : events.map(e => '<div class="event-item"><div class="e-name">'+e.title+'</div>'+(e.location?'<div class="e-row"><span>Location :</span>'+e.location+'</div>':'')+(e.time?'<div class="e-row"><span>Time :</span>'+e.time+'</div>':'')+(e.livestream?'<div class="e-row"><span>Live Streaming :</span><a href="'+e.livestream+'" target="_blank" class="event-link">'+e.livestream+'</a></div>':'')+(e.with?'<div class="e-row"><span>With :</span>'+e.with+'</div>':'')+(e.note?'<div class="e-row"><span>Note :</span><span class="event-note">'+e.note+'</span></div>':'')+'</div>').join("");
   document.getElementById("cal-popup-overlay").classList.add("active");
 }
 
@@ -368,7 +227,7 @@ async function init() {
   renderCalendar();
   await Promise.all([loadConfig(),loadSlider(),loadWorks(),loadNews(),loadSocials(),loadVideos(),loadSchedule(),loadContact(),loadRewards()]);
   const overlay=document.getElementById("loading-overlay");
-  if (overlay) { overlay.style.opacity="0"; overlay.style.transition="opacity 0.3s"; setTimeout(()=>overlay.style.display="none",300); }
+  if (overlay) { overlay.classList.add("is-hidden"); setTimeout(()=>overlay.hidden=true,300); }
 }
 
 init();
