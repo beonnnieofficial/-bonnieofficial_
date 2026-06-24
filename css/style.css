@@ -4,7 +4,7 @@ body { font-family: sans-serif; background: #f5f5f5; min-height: 100vh; }
 .spinner { width: 44px; height: 44px; border: 4px solid #f0e6ff; border-top: 4px solid #7c3aed; border-radius: 50%; animation: spin 0.8s linear infinite; }
 .spinner-text { margin-top: 12px; font-size: 13px; color: #7c3aed; font-weight: 500; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.top-banner { position: relative; height: 200px; overflow: hidden; background: #ddd; cursor: grab; user-select: none; }
+.top-banner { position: relative; height: 300px; overflow: hidden; background: #ddd; user-select: none; }
 .top-banner img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; display: none; pointer-events: none; }
 .top-banner img.active { display: block; }
 .banner-dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 6px; z-index: 2; }
