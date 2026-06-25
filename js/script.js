@@ -350,11 +350,76 @@ function showEvents(dateStr) {
   const dateTitle = document.getElementById("schedule-detail-date");
   const [y,m,d] = dateStr.split("-");
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-  if (!list || !dateTitle) return;
-  if (dateTitle) dateTitle.textContent = d + " " + months[parseInt(m)-1] + " " + y;
+  if (!list) return;
+  
+  const dateStrFormatted = d + " " + months[parseInt(m)-1] + " " + y;
+  if (dateTitle) dateTitle.textContent = dateStrFormatted;
+
   list.innerHTML = !events.length
-    ? '<div class="event-empty">ไม่มีงานในวันนี้<br><span>No events scheduled for this day.</span></div>'
-    : events.map(e => '<div class="event-item"><div class="e-name">'+e.title+'</div>'+(e.location?'<div class="e-row"><span>Location :</span>'+e.location+'</div>':'')+(e.time?'<div class="e-row"><span>Time :</span>'+e.time+'</div>':'')+(e.livestream?'<div class="e-row"><span>Live Streaming :</span><a href="'+e.livestream+'" target="_blank" class="event-link">'+e.livestream+'</a></div>':'')+(e.with?'<div class="e-row"><span>With :</span>'+e.with+'</div>':'')+(e.note?'<div class="e-row"><span>Note :</span><span class="event-note">'+e.note+'</span></div>':'')+'</div>').join("");
+    ? `<div class="event-empty"><div class="event-item-date" style="margin-bottom: 6px; text-align: center;">${dateStrFormatted}</div>ไม่มีงานในวันนี้<br><span>No events scheduled for this day.</span></div>`
+    : events.map(e => {
+        const cleanTime = e.time ? e.time.replace(/\s*\(th\)/i, '') : '';
+        const timeBadge = cleanTime ? `<span class="event-item-time">${cleanTime}</span>` : '';
+        
+        let liveVal = e.livestream || '-';
+        if (liveVal !== '-' && (liveVal.startsWith('http://') || liveVal.startsWith('https://'))) {
+          liveVal = `<a href="${liveVal}" target="_blank" class="event-link">${liveVal}</a>`;
+        }
+
+        const calendarIconSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor" style="width: 1em; height: 1em;"><path d="M152 24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H64C28.7 64 0 92.7 0 128v320c0 35.3 28.7 64 64 64h320c35.3 0 64-28.7 64-64V128c0-35.3-28.7-64-64-64h-40V24c0-13.3-10.7-24-24-24s-24 10.7-24 24V64H152V24zM48 160h352v288c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V160zm80 80c0-8.8 7.2-16 16-16h176c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16zm0 96c0-8.8 7.2-16 16-16h176c8.8 0 16 7.2 16 16s-7.2 16-16 16H144c-8.8 0-16-7.2-16-16z"/></svg>`;
+        const titleRow = `
+          <div class="e-row">
+            <span class="e-icon-wrap">${calendarIconSvg}</span>
+            <span class="e-colon">:</span>
+            <span class="e-value e-title-val">${e.title || '-'}</span>
+          </div>
+        `;
+        const locationRow = `
+          <div class="e-row">
+            <span class="e-icon-wrap"><i class="fa-solid fa-location-dot"></i></span>
+            <span class="e-colon">:</span>
+            <span class="e-value">${e.location || '-'}</span>
+          </div>
+        `;
+        const withRow = `
+          <div class="e-row">
+            <span class="e-icon-wrap"><i class="fa-regular fa-circle-user"></i></span>
+            <span class="e-colon">:</span>
+            <span class="e-value">${e.with || '-'}</span>
+          </div>
+        `;
+        const liveRow = `
+          <div class="e-row">
+            <span class="e-icon-wrap"><span class="e-live-label">LIVE</span></span>
+            <span class="e-colon">:</span>
+            <span class="e-value">${liveVal}</span>
+          </div>
+        `;
+        const noteRow = e.note ? `
+          <div class="e-row">
+            <span class="e-icon-wrap"><i class="fa-regular fa-note-sticky"></i></span>
+            <span class="e-colon">:</span>
+            <span class="e-value event-note">${e.note}</span>
+          </div>
+        ` : '';
+
+        return `
+          <div class="event-item">
+            <div class="event-item-header">
+              <span class="event-item-date">${dateStrFormatted}</span>
+              ${timeBadge}
+            </div>
+            <div class="event-item-body">
+              ${titleRow}
+              ${locationRow}
+              ${withRow}
+              ${liveRow}
+              ${noteRow}
+            </div>
+          </div>
+        `;
+      }).join("");
+
   document.querySelectorAll(".cal-grid .day").forEach(day => day.classList.toggle("selected", day.dataset.date===dateStr));
 }
 
