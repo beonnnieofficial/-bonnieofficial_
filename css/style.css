@@ -150,8 +150,9 @@ textarea {
 
 .top-banner {
   position: relative;
-  height: var(--banner-height);
-  min-height: 130px;
+  width: 100%;
+  aspect-ratio: 1920 / 450;
+  height: auto;
   max-height: 300px;
   overflow: hidden;
   background: var(--color-placeholder);
@@ -176,24 +177,30 @@ textarea {
 
 .banner-dots {
   position: absolute;
-  bottom: clamp(6px, 1vw, 10px);
+  bottom: 8px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: clamp(5px, 0.8vw, 8px);
+  gap: 6px;
   z-index: 2;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 10px;
+  backdrop-filter: blur(2px);
 }
 
 .dot {
-  width: clamp(6px, 0.8vw, 8px);
-  height: clamp(6px, 0.8vw, 8px);
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.5);
   cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .dot.active {
-  background: var(--color-primary);
+  background: #ffffff;
+  transform: scale(1.2);
 }
 
 .navbar {
@@ -931,7 +938,7 @@ textarea {
 }
 
 .social-section {
-  margin-top: 14px;
+  margin-top: 72px;
 }
 
 .social-grid {
@@ -949,12 +956,12 @@ textarea {
 
 .s-name {
   display: inline-block;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-primary);
   letter-spacing: .5px;
   margin-bottom: 8px;
-  background: linear-gradient(to right, rgba(192, 132, 252, 0.45), transparent);
-  padding: 3px 24px 3px 8px;
+  background: var(--color-primary-soft);
+  padding: 3px 8px;
   border-radius: 0;
 }
 
@@ -1003,7 +1010,7 @@ textarea {
 }
 
 .yt-section {
-  margin-top: 14px;
+  margin-top: 72px;
 }
 
 .yt-slider-wrapper {
@@ -1235,10 +1242,10 @@ textarea {
 
 .contact-handle {
   display: inline-block;
-  font-weight: 700;
+  font-weight: 600;
   color: var(--color-primary);
-  background: linear-gradient(to right, rgba(192, 132, 252, 0.45), transparent);
-  padding: 3px 24px 3px 8px;
+  background: var(--color-primary-soft);
+  padding: 3px 8px;
   border-radius: 0;
 }
 
@@ -1447,10 +1454,6 @@ textarea {
 /* ============================================================
    RESPONSIVE — Small Tablet / Large Mobile (max 768px)
    ============================================================ */
-@media (max-width: 768px) {
-  .top-banner {
-    height: clamp(130px, 28vw, 180px);
-  }
 
   .main {
     flex-direction: column;
@@ -1586,10 +1589,6 @@ textarea {
    RESPONSIVE — Mobile (max 520px)
    ============================================================ */
 @media (max-width: 520px) {
-  .top-banner {
-    height: clamp(120px, 34vw, 150px);
-    min-height: 120px;
-  }
 
   .navbar {
     height: 40px;
@@ -1714,6 +1713,10 @@ textarea {
   }
 
   /* Social */
+  .social-section {
+    margin-top: 40px;
+  }
+
   .social-grid>div {
     width: 130px;
   }
@@ -1724,7 +1727,7 @@ textarea {
 
   /* YouTube grid */
   .yt-section {
-    margin-top: 10px;
+    margin-top: 40px;
   }
 
   .yt-grid {
@@ -1841,10 +1844,6 @@ textarea {
    RESPONSIVE — Extra Small (max 360px)
    ============================================================ */
 @media (max-width: 360px) {
-  .top-banner {
-    height: 118px;
-    min-height: 118px;
-  }
 
   .tab {
     padding: 7px 10px;
