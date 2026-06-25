@@ -572,7 +572,20 @@ textarea {
   min-width: 0;
 }
 
+.calendar-board {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(260px, 1fr);
+  gap: clamp(14px, 2vw, 22px);
+  align-items: start;
+  min-width: 0;
+  overflow: hidden;
+  padding-top: 30px;
+  position: relative;
+}
+
 .calendar-section .calendar-wrap {
+  min-width: 0;
+  position: static;
   width: 100%;
   max-width: 360px;
 }
@@ -584,24 +597,31 @@ textarea {
   color: var(--color-primary);
   letter-spacing: 0;
   line-height: 1;
-  margin-bottom: 8px;
+  left: 0;
+  margin-bottom: 0;
+  position: absolute;
+  top: 0;
   text-transform: uppercase;
 }
 
 .calendar {
   border: 2px solid #b660ee;
+  box-sizing: border-box;
   border-radius: 18px;
-  padding: clamp(12px, 1.8vw, 18px);
+  overflow: hidden;
+  padding: 14px;
   background: var(--color-surface);
   box-shadow: 0 8px 22px rgba(124, 58, 237, 0.07);
+  width: 100%;
 }
 
 .cal-header {
   display: grid;
   grid-template-columns: 30px minmax(72px, 1fr) minmax(82px, 1fr) 30px;
   align-items: center;
-  gap: clamp(6px, 1vw, 10px);
-  margin-bottom: clamp(12px, 2vw, 18px);
+  gap: 8px;
+  margin-bottom: 14px;
+  width: 100%;
 }
 
 .cal-header select {
@@ -642,8 +662,9 @@ textarea {
 .cal-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: clamp(4px, 0.8vw, 7px);
+  gap: 6px;
   text-align: center;
+  width: 100%;
 }
 
 .cal-grid .day-label {
@@ -741,6 +762,49 @@ textarea {
 
 .event-link, .event-note {
   color: var(--color-primary);
+}
+
+.schedule-detail {
+  background: var(--color-surface);
+  border: 2px solid #b660ee;
+  box-sizing: border-box;
+  border-radius: 18px;
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.07);
+  min-height: 100%;
+  min-width: 0;
+  padding: clamp(14px, 2vw, 18px);
+}
+
+.schedule-detail-date {
+  color: var(--color-primary);
+  font-size: var(--text-md);
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.schedule-detail-list {
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.schedule-detail-notice {
+  background: var(--color-primary-tint);
+  border: 1px solid #e9d5ff;
+  border-radius: var(--radius-md);
+  color: #6b21a8;
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  margin-top: 12px;
+  padding: 9px 10px;
+}
+
+.schedule-detail-notice span {
+  color: #9333ea;
+  display: block;
+  font-size: var(--text-2xs);
+  margin-top: 2px;
 }
 
 .social-section {
@@ -1182,6 +1246,16 @@ textarea {
   .profile-detail-block {
     min-height: 353px;
   }
+
+  .calendar-board {
+    grid-template-columns: 1fr;
+  }
+
+  .schedule-detail {
+    max-width: 360px;
+    min-height: 0;
+    width: 100%;
+  }
 }
 
 /* ============================================================
@@ -1272,6 +1346,10 @@ textarea {
   }
 
   .calendar-section .calendar-wrap {
+    max-width: 360px;
+  }
+
+  .schedule-detail {
     max-width: 360px;
   }
 
@@ -1447,10 +1525,24 @@ textarea {
     padding: 12px;
   }
 
+  .calendar-board {
+    gap: 10px;
+    padding-top: 26px;
+  }
+
+  .schedule-detail {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
   .cal-header {
     grid-template-columns: 28px minmax(64px, 1fr) minmax(74px, 1fr) 28px;
     gap: 6px;
     margin-bottom: 12px;
+  }
+
+  .cal-grid {
+    gap: 5px;
   }
 
   .cal-grid .day {
@@ -1540,6 +1632,19 @@ textarea {
   .cal-grid .day {
     border-radius: 7px;
     font-size: var(--text-xs);
+  }
+
+  .calendar {
+    padding: 10px;
+  }
+
+  .cal-header {
+    grid-template-columns: 26px minmax(60px, 1fr) minmax(68px, 1fr) 26px;
+    gap: 5px;
+  }
+
+  .cal-grid {
+    gap: 4px;
   }
 
   .contact-list {

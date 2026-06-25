@@ -188,12 +188,18 @@ async function loadVideos() {
 }
 
 let scheduleEvents = [];
+let selectedScheduleDate = formatDateKey(new Date());
+
+function formatDateKey(date) {
+  return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,'0')+"-"+String(date.getDate()).padStart(2,'0');
+}
 
 async function loadSchedule() {
   const rows = await fetchCSV(GID.schedule);
   scheduleEvents = rows.filter(r => r[0]).map(r => ({ date:r[0],title:r[1]||'',location:(r[2]==='-'?'':r[2])||'',time:(r[3]==='-'?'':r[3])||'',livestream:(r[4]==='-'?'':r[4])||'',with:(r[5]==='-'?'':r[5])||'',note:(r[6]==='-'?'':r[6])||'' }));
   scheduleDates = [...new Set(scheduleEvents.map(e => e.date))];
   renderCalendar();
+  if (selectedScheduleDate) showEvents(selectedScheduleDate);
 }
 
 async function loadRewards() {
@@ -208,19 +214,21 @@ async function loadRewards() {
   tbody.innerHTML = rows.map(r => hasEvent ? '<tr><td>'+(r[0]||'')+'</td><td>'+(r[2]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>' : '<tr><td>'+(r[0]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>').join("");
 }
 
-function closePopup(e) { if (!e || e.target===document.getElementById("cal-popup-overlay")) document.getElementById("cal-popup-overlay").classList.remove("active"); }
+function closePopup() {}
 
 function showEvents(dateStr) {
+  selectedScheduleDate = dateStr;
   const events = scheduleEvents.filter(e => e.date===dateStr);
-  const list = document.getElementById("cal-popup-list");
-  const dateTitle = document.getElementById("cal-popup-date");
+  const list = document.getElementById("schedule-detail-list");
+  const dateTitle = document.getElementById("schedule-detail-date");
   const [y,m,d] = dateStr.split("-");
   const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  if (!list || !dateTitle) return;
   if (dateTitle) dateTitle.textContent = d + " " + months[parseInt(m)-1] + " " + y;
   list.innerHTML = !events.length
     ? '<div class="event-empty">ไม่มีงานในวันนี้<br><span>No events scheduled for this day.</span></div>'
     : events.map(e => '<div class="event-item"><div class="e-name">'+e.title+'</div>'+(e.location?'<div class="e-row"><span>Location :</span>'+e.location+'</div>':'')+(e.time?'<div class="e-row"><span>Time :</span>'+e.time+'</div>':'')+(e.livestream?'<div class="e-row"><span>Live Streaming :</span><a href="'+e.livestream+'" target="_blank" class="event-link">'+e.livestream+'</a></div>':'')+(e.with?'<div class="e-row"><span>With :</span>'+e.with+'</div>':'')+(e.note?'<div class="e-row"><span>Note :</span><span class="event-note">'+e.note+'</span></div>':'')+'</div>').join("");
-  document.getElementById("cal-popup-overlay").classList.add("active");
+  document.querySelectorAll(".cal-grid .day").forEach(day => day.classList.toggle("selected", day.dataset.date===dateStr));
 }
 
 function renderCalendar() {
@@ -238,11 +246,12 @@ function renderCalendar() {
     const ds=year+"-"+String(month+1).padStart(2,'0')+"-"+String(d).padStart(2,'0');
     const isToday=d===today.getDate()&&month===today.getMonth()&&year===today.getFullYear();
     const isEvent=scheduleDates.includes(ds);
-    html+='<div class="day '+(isToday?"today":isEvent?"highlight":"")+'" onclick="showEvents(\''+ds+'\')">'+d+(isEvent?'<span class="event-dot"></span>':'')+'</div>';
+    html+='<div class="day '+(isToday?"today":isEvent?"highlight":"")+(selectedScheduleDate===ds?" selected":"")+'" data-date="'+ds+'" onclick="showEvents(\''+ds+'\')">'+d+(isEvent?'<span class="event-dot"></span>':'')+'</div>';
   }
   const rem=(7-(firstDay+daysInMonth)%7)%7;
   for (let i=1;i<=rem;i++) html+='<div class="day muted">'+i+'</div>';
   document.getElementById("cal-grid").innerHTML=html;
+  if (selectedScheduleDate && selectedScheduleDate.startsWith(year+"-"+String(month+1).padStart(2,'0'))) showEvents(selectedScheduleDate);
 }
 
 function changeMonth(dir) {
