@@ -2002,7 +2002,7 @@ textarea {
 
 .event-item .e-row {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 6px;
   margin-bottom: 8px;
   color: var(--color-primary);
@@ -2044,7 +2044,9 @@ textarea {
   font-weight: 800;
   padding: 3px 6px;
   border-radius: 4px;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   line-height: 1;
   letter-spacing: 0.5px;
 }
