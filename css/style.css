@@ -278,8 +278,7 @@ textarea {
 }
 
 .bio-text {
-  line-height: 1.7;
-  margin-top: 14px;
+  display: none;
 }
 
 .profile-header-row {
@@ -711,7 +710,7 @@ textarea {
 }
 
 .calendar {
-  border: 2px solid #b660ee;
+  border: 2px solid var(--color-navbar);
   box-sizing: border-box;
   border-radius: 18px;
   overflow: hidden;
@@ -731,11 +730,11 @@ textarea {
 }
 
 .cal-header select {
-  border: 2px solid #b660ee;
+  border: 2px solid var(--color-navbar);
   border-radius: 10px;
   padding: 6px 28px 6px 10px;
   font-size: clamp(0.86rem, 0.8rem + 0.24vw, 1rem);
-  color: #222;
+  color: var(--color-primary);
   background: var(--color-surface);
   font-weight: 800;
   line-height: 1.1;
@@ -749,7 +748,7 @@ textarea {
   background: transparent;
   border: none;
   border-radius: 10px;
-  color: #1f1f1f;
+  color: var(--color-primary);
   cursor: pointer;
   display: flex;
   font-size: clamp(1.35rem, 1.18rem + 0.55vw, 1.65rem);
@@ -774,9 +773,9 @@ textarea {
 }
 
 .cal-grid .day-label {
-  color: #777;
+  color: var(--color-primary);
   font-size: clamp(0.72rem, 0.68rem + 0.16vw, 0.82rem);
-  font-weight: 400;
+  font-weight: 700;
   line-height: 1;
   padding: 2px 0 7px;
 }
@@ -785,11 +784,11 @@ textarea {
   align-items: center;
   aspect-ratio: 1;
   border-radius: 10px;
-  color: #222;
+  color: var(--color-primary);
   cursor: pointer;
   display: flex;
   font-size: clamp(0.86rem, 0.8rem + 0.24vw, 1.02rem);
-  font-weight: 400;
+  font-weight: 700;
   justify-content: center;
   line-height: 1;
   padding: 0;
@@ -802,27 +801,29 @@ textarea {
   transform: translateY(-1px);
 }
 
-.cal-grid .day.today {
-  background: #252525;
-  color: #fff;
+.cal-grid .day.today,
+.cal-grid .day.today.selected {
+  background: var(--color-primary) !important;
+  color: #fff !important;
 }
 
 .cal-grid .day.highlight {
-  background: #f2f2f2;
-  color: #222;
+  background: transparent;
+  color: var(--color-primary);
 }
 
 .cal-grid .day.highlight:hover {
-  background: #e9ddff;
+  background: var(--color-primary-soft);
 }
 
 .cal-grid .day.selected {
-  outline: 2px solid var(--color-primary);
+  background: #ECCFFF !important;
+  color: var(--color-primary) !important;
 }
 
 .cal-grid .day.muted {
   background: transparent;
-  color: #b8b8b8;
+  color: rgba(192, 132, 252, 0.45);
 }
 
 .event-dot {
@@ -836,8 +837,13 @@ textarea {
   transform: translateX(-50%);
 }
 
-.day.today .event-dot {
+.day.today .event-dot,
+.day.today.selected .event-dot {
   background: #fff;
+}
+
+.day.selected .event-dot {
+  background: var(--color-primary);
 }
 
 .event-item {
@@ -871,8 +877,10 @@ textarea {
 }
 
 .schedule-detail {
+  display: flex;
+  flex-direction: column;
   background: var(--color-surface);
-  border: 2px solid #b660ee;
+  border: 2px solid var(--color-navbar);
   box-sizing: border-box;
   border-radius: 18px;
   box-shadow: 0 8px 22px rgba(124, 58, 237, 0.07);
@@ -893,6 +901,7 @@ textarea {
   max-height: 260px;
   overflow-y: auto;
   padding-right: 4px;
+  margin-bottom: 14px;
 }
 
 .schedule-detail-notice {
@@ -902,7 +911,7 @@ textarea {
   color: #6b21a8;
   font-size: var(--text-xs);
   line-height: 1.55;
-  margin-top: 12px;
+  margin-top: auto;
   padding: 9px 10px;
 }
 
@@ -936,9 +945,9 @@ textarea {
   color: var(--color-primary);
   letter-spacing: .5px;
   margin-bottom: 8px;
-  background: var(--color-primary-soft);
-  padding: 3px 8px;
-  border-radius: 4px;
+  background: linear-gradient(to right, rgba(192, 132, 252, 0.45), transparent);
+  padding: 3px 24px 3px 8px;
+  border-radius: 0;
 }
 
 .social-link {
@@ -1217,7 +1226,12 @@ textarea {
 }
 
 .contact-handle {
+  display: inline-block;
   font-weight: 700;
+  color: var(--color-primary);
+  background: linear-gradient(to right, rgba(192, 132, 252, 0.45), transparent);
+  padding: 3px 24px 3px 8px;
+  border-radius: 0;
 }
 
 .yt-page-grid {
