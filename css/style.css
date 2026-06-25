@@ -2013,9 +2013,9 @@ textarea {
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
-  width: 38px;
+  width: 44px;
   color: var(--color-primary);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   flex-shrink: 0;
 }
 
@@ -2040,13 +2040,16 @@ textarea {
 .e-live-label {
   background: var(--color-primary);
   color: #ffffff !important;
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 800;
-  padding: 3px 6px;
+  width: 38px;
+  height: 24px;
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
   letter-spacing: 0.5px;
+  position: relative;
+  left: 4px;
 }
