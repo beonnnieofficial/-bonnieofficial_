@@ -458,37 +458,73 @@ textarea {
 
 .color-swatches {
   display: flex;
-  gap: 8px;
+  gap: clamp(8px, 1.2vw, 12px);
   padding-top: 2px;
 }
 
-.swatch {
-  display: block;
-  width: clamp(42px, 5vw, 54px);
-  aspect-ratio: 0.75;
-  border: 6px solid currentColor;
-  background: #fff;
+.swatch-card {
+  display: flex;
+  flex-direction: column;
+  background-color: currentColor;
+  padding: clamp(6px, 0.7vw, 8px);
+  width: clamp(60px, 6.5vw, 78px);
+  aspect-ratio: 0.72;
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.08);
 }
 
-.swatch::before {
-  content: "";
-  display: block;
-  width: 72%;
-  aspect-ratio: 1;
-  background: currentColor;
-  margin: 4px auto 0;
+.swatch-card.black {
+  color: #000000;
 }
 
-.swatch.black {
-  color: #050505;
-}
-
-.swatch.purple {
+.swatch-card.purple {
   color: #7a2bb5;
 }
 
-.swatch.pink {
+.swatch-card.pink {
   color: #ed4fc6;
+}
+
+.swatch-inner {
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  height: 100%;
+  padding: clamp(4px, 0.5vw, 6px);
+  box-sizing: border-box;
+  border-radius: 2px;
+}
+
+.swatch-color-box {
+  background-color: currentColor;
+  width: 100%;
+  aspect-ratio: 1.15;
+  margin-bottom: clamp(4px, 0.5vw, 6px);
+}
+
+.swatch-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: auto;
+}
+
+.swatch-title-th {
+  font-size: clamp(8px, 0.9vw, 11px);
+  font-weight: 700;
+  color: #000000;
+  line-height: 1.1;
+  letter-spacing: -0.2px;
+}
+
+.swatch-title-en {
+  font-size: clamp(6px, 0.7vw, 9px);
+  font-weight: 500;
+  color: #555555;
+  line-height: 1;
+  margin-top: 1px;
 }
 
 .profile-list-block {
@@ -521,7 +557,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
   column-gap: clamp(24px, 3vw, 38px);
-  max-width: min(100%, 720px);
+  max-width: min(100%, 820px);
   font-size: clamp(0.72rem, 0.68rem + 0.16vw, 0.84rem);
   min-height: 344px;
 }
@@ -543,24 +579,36 @@ textarea {
 
 .profile-about-block p {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 10px;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
   align-items: center;
   line-height: 1.2;
-  margin: 0 0 9px;
+  margin: 0 0 16px;
 }
 
 .profile-about-block p span,
 .about-color-row>span {
   align-self: center;
-  background: #e8c2ff;
-  border-radius: 7px;
+  justify-self: start;
+  background: #e6d4fc;
+  border-radius: 12px;
   color: #7431b2;
-  display: inline-block;
-  font-weight: 600;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 700;
   line-height: 1;
-  padding: 5px 7px;
+  padding: 8px 16px;
   white-space: nowrap;
+  box-shadow: 0 4px 0 #b38df7;
+  transform: translateY(-2px);
+  font-size: clamp(0.72rem, 0.68rem + 0.16vw, 0.84rem);
+  width: 130px;
+  box-sizing: border-box;
+}
+
+.about-color-row>span {
+  align-self: end;
 }
 
 .profile-about-block p strong {
@@ -571,25 +619,17 @@ textarea {
   min-width: 0;
   overflow-wrap: anywhere;
   padding: 3px 4px 4px 0;
+  white-space: nowrap;
 }
 
 .about-color-row {
   display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 10px;
-  align-items: start;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: end;
   color: #111;
   line-height: 1.45;
-  margin: 12px 0 0;
-}
-
-.profile-about-block .swatch {
-  width: clamp(32px, 3.4vw, 44px);
-  border-width: 5px;
-}
-
-.profile-about-block .swatch::before {
-  margin-top: 3px;
+  margin: 16px 0 0;
 }
 
 .profile-detail-block h3 {
@@ -1515,19 +1555,41 @@ textarea {
     padding-left: 0;
   }
 
+  .profile-about-block p {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .profile-about-block p strong {
+    align-self: stretch;
+    padding-bottom: 4px;
+  }
+
   .profile-about-block p span,
   .about-color-row>span {
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     margin: 0;
     white-space: nowrap;
+    width: auto;
+    transform: translateY(0);
+    box-shadow: 0 3px 0 #b38df7;
   }
 
   .about-color-row {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 
   .color-swatches {
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 10px;
   }
 
   .bio-text {
