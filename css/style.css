@@ -960,10 +960,61 @@ textarea {
   margin-top: 14px;
 }
 
+.yt-slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.yt-slider-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 22px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: background 0.2s, transform 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.yt-slider-nav:hover {
+  background: var(--color-primary);
+  color: #fff;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.yt-slider-nav.prev-btn {
+  left: -18px;
+}
+
+.yt-slider-nav.next-btn {
+  right: -18px;
+}
+
 .yt-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  width: 100%;
+}
+
+.yt-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .yt-thumb {
@@ -979,6 +1030,9 @@ textarea {
 .yt-link {
   text-decoration: none;
   display: block;
+  flex: 0 0 calc((100% - 3 * 16px) / 4);
+  scroll-snap-align: start;
+  box-sizing: border-box;
 }
 
 .yt-title {
@@ -1303,7 +1357,11 @@ textarea {
   }
 
   .yt-grid {
-    grid-template-columns: repeat(2, 1fr);
+    display: flex;
+  }
+
+  .yt-link {
+    flex: 0 0 calc((100% - 16px) / 2);
   }
 
   .profile-card-body {
@@ -1450,9 +1508,7 @@ textarea {
     gap: 10px;
   }
 
-  .yt-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* yt-grid flex layout is inherited from the 900px media query */
 
   .works-grid {
     grid-template-columns: 1fr 1fr;
@@ -1615,8 +1671,16 @@ textarea {
   }
 
   .yt-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .yt-link {
+    flex: 0 0 100%;
+  }
+
+  .yt-slider-nav {
+    display: none;
   }
 
   .yt-page-grid {
@@ -1730,9 +1794,7 @@ textarea {
     font-size: var(--text-xs);
   }
 
-  .yt-grid {
-    grid-template-columns: 1fr;
-  }
+  /* yt-grid layout is inherited from the 520px media query */
 
   .yt-page-grid {
     grid-template-columns: 1fr;

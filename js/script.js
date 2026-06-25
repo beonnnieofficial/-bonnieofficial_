@@ -267,6 +267,13 @@ function switchTab(name, el) {
   el.classList.add("active"); document.getElementById("tab-"+name).classList.add("active");
 }
 
+function slideYt(dir) {
+  const grid = document.getElementById("yt-grid");
+  if (!grid) return;
+  const scrollAmount = grid.clientWidth + 16;
+  grid.scrollBy({ left: dir * scrollAmount, behavior: "smooth" });
+}
+
 async function init() {
   renderCalendar();
   await Promise.all([loadConfig(),loadSlider(),loadWorks(),loadNews(),loadSocials(),loadVideos(),loadSchedule(),loadContact(),loadRewards()]);
