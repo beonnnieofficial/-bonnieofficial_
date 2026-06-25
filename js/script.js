@@ -5,11 +5,65 @@ let scheduleDates=[], sliderImages=[], sliderIndex=0, sliderTimer;
 function getSheetUrl(gid) { return SHEET_URL.replace(/gid=\d+/, "gid=" + gid); }
 
 async function fetchCSV(gid) {
+  const cacheKey = "csv_data_" + gid;
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 seconds timeout
+
   try {
-    const res = await fetch(getSheetUrl(gid) + "&t=" + Date.now());
+    const res = await fetch(getSheetUrl(gid) + "&t=" + Date.now(), { signal: controller.signal });
+    clearTimeout(timeoutId);
+    if (!res.ok) throw new Error("HTTP error " + res.status);
     const text = await res.text();
-    return text.trim().split("\n").slice(1).map(row => row.split(",").map(c => c.trim().replace(/^"|"$/g, ""))).filter(r => r[0]);
-  } catch(e) { return []; }
+    const data = text.trim().split("\n").slice(1).map(row => row.split(",").map(c => c.trim().replace(/^"|"$/g, ""))).filter(r => r[0]);
+    try {
+      localStorage.setItem(cacheKey, JSON.stringify(data));
+    } catch (e) {
+      console.warn("Storage quota exceeded or disabled", e);
+    }
+    return data;
+  } catch(e) {
+    clearTimeout(timeoutId);
+    console.error("Fetch failed for GID " + gid + ", returning cache if available", e);
+    try {
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) return JSON.parse(cached);
+    } catch(err) {
+      console.error("Cache read failed", err);
+    }
+    return [];
+  }
+}
+
+async function loadDataAndRender(gid, renderFn) {
+  const cacheKey = "csv_data_" + gid;
+  let cachedData = null;
+
+  // 1. Try to load from cache and render immediately
+  try {
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+      cachedData = JSON.parse(cached);
+      renderFn(cachedData);
+    }
+  } catch(e) {
+    console.error("Failed to read cache for GID " + gid, e);
+  }
+
+  // 2. Fetch from network in background
+  try {
+    const data = await fetchCSV(gid);
+    if (data && data.length) {
+      renderFn(data);
+      return data;
+    }
+  } catch(e) {
+    console.warn("loadDataAndRender network/render failed for GID " + gid, e);
+  }
+  
+  if (!cachedData) {
+    renderFn([]);
+  }
+  return cachedData || [];
 }
 
 function convertDriveUrl(url) {
@@ -21,8 +75,7 @@ function convertDriveUrl(url) {
   return url;
 }
 
-async function loadConfig() {
-  const rows = await fetchCSV(GID.config);
+function renderConfig(rows) {
   const cfg = {};
   rows.forEach(r => { if(r[0] && r[1] && !cfg[r[0].trim()]) cfg[r[0].trim()] = r[1].trim(); });
 
@@ -34,20 +87,41 @@ async function loadConfig() {
   if (cfg.site_name) { logo.textContent = cfg.site_name; document.title = cfg.site_name; }
 }
 
-async function loadSlider() {
-  const rows = await fetchCSV(GID.slider);
-  sliderImages = rows.map(r => convertDriveUrl(r[0])).filter(Boolean);
+async function loadConfig() {
+  return loadDataAndRender(GID.config, renderConfig);
+}
+
+function renderSlider(rows) {
   const box = document.getElementById("banner-box");
   const dotsEl = document.getElementById("banner-dots");
+  if (!box || !dotsEl) return;
+  
+  // Clear old images to prevent duplicate stacking
+  const oldImgs = box.querySelectorAll("img");
+  oldImgs.forEach(img => img.remove());
+  
+  sliderImages = rows.map(r => convertDriveUrl(r[0])).filter(Boolean);
   if (!sliderImages.length) return;
-  sliderImages.forEach((src, i) => { const img = document.createElement("img"); img.src = src; if (i===0) img.classList.add("active"); box.insertBefore(img, dotsEl); });
+  
+  sliderImages.forEach((src, i) => { 
+    const img = document.createElement("img"); 
+    img.src = src; 
+    if (i===0) img.classList.add("active"); 
+    box.insertBefore(img, dotsEl); 
+  });
   dotsEl.innerHTML = sliderImages.map((_,i) => '<div class="dot' + (i===0?' active':'') + '" onclick="goSlide(' + i + ')"></div>').join("");
+  sliderIndex = 0;
   startSlider();
+}
+
+async function loadSlider() {
+  return loadDataAndRender(GID.slider, renderSlider);
 }
 
 function goSlide(i) {
   const imgs = document.querySelectorAll("#banner-box img");
   const dots = document.querySelectorAll("#banner-dots .dot");
+  if (!imgs.length) return;
   imgs.forEach(el => el.classList.remove("active")); dots.forEach(el => el.classList.remove("active"));
   sliderIndex = (i + sliderImages.length) % sliderImages.length;
   imgs[sliderIndex].classList.add("active"); dots[sliderIndex].classList.add("active");
@@ -57,6 +131,8 @@ function startSlider() {
   if (sliderImages.length < 2) return;
   clearInterval(sliderTimer); sliderTimer = setInterval(() => goSlide(sliderIndex + 1), 3000);
   const box = document.getElementById("banner-box");
+  if (!box || box.dataset.listenersAttached) return;
+  box.dataset.listenersAttached = "1";
   let startX=0;
   box.addEventListener("touchstart", e => { startX=e.touches[0].clientX; }, {passive:true});
   box.addEventListener("touchend", e => { const diff=startX-e.changedTouches[0].clientX; if (Math.abs(diff)>40) { clearInterval(sliderTimer); goSlide(sliderIndex+(diff>0?1:-1)); startSlider(); } }, {passive:true});
@@ -71,35 +147,52 @@ function getWorksThumbnail(imageUrl, link) {
   return imageUrl ? convertDriveUrl(imageUrl) : "";
 }
 
-async function loadWorks() {
-  const rows = await fetchCSV(GID.works);
+function renderWorks(rows) {
   const grid = document.getElementById("works-grid");
-  if (!rows.length || !grid) return;
+  if (!grid) return;
+  if (!rows.length) { grid.innerHTML = ""; return; }
   grid.innerHTML = rows.map(r => { const title=r[0]||"", imageUrl=r[1]||"", link=r[2]||"#", thumb=getWorksThumbnail(imageUrl,link), id=(link.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||"", onerror=id?' onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"':''; return '<div class="work-item"><a href="'+link+'" target="_blank"><img src="'+thumb+'" alt="'+title+'"'+onerror+'></a><div class="work-title">'+title+'</div></div>'; }).join("");
 }
 
-async function loadNews() {
-  const rows = await fetchCSV(GID.news);
+async function loadWorks() {
+  return loadDataAndRender(GID.works, renderWorks);
+}
+
+function renderNews(rows) {
   const list = document.getElementById("news-list");
+  if (!list) return;
   if (!rows.length) { list.innerHTML = "<div class='loading'>ยังไม่มีข้อมูล</div>"; return; }
   list.innerHTML = rows.map(r => '<div class="news-item"><div class="news-date">'+r[0]+'</div><div class="news-title"><a href="'+(r[2]||'#')+'" target="_blank">'+r[1]+'</a></div></div>').join("");
 }
 
-async function loadSocials() {
-  const rows = await fetchCSV(GID.socials);
+async function loadNews() {
+  return loadDataAndRender(GID.news, renderNews);
+}
+
+function renderSocials(rows) {
+  const grid = document.getElementById("social-grid");
+  if (!grid) return;
   if (!rows.length) return;
-  document.getElementById("social-grid").innerHTML = rows.map(r => {
+  grid.innerHTML = rows.map(r => {
     const platform=r[0]||"", imageUrl=r[1]||"", link=r[2]||"#", followers=r[3]||"";
     const bar = followers ? '<div class="follower-bar"><span class="follower-count">'+followers+'</span><span class="follower-label">followers</span></div>' : '';
     return '<div><div class="s-name">'+platform+'</div><a href="'+link+'" target="_blank" class="social-link"><div class="social-thumb-wrap"><img src="'+convertDriveUrl(imageUrl)+'" class="social-thumb" alt="'+platform+'">'+bar+'</div></a></div>';
   }).join("");
 }
 
-async function loadContact() {
-  const rows = await fetchCSV(GID.contact);
+async function loadSocials() {
+  return loadDataAndRender(GID.socials, renderSocials);
+}
+
+function renderContact(rows) {
   const list = document.getElementById("contact-list");
-  if (!rows.length||!list) return;
+  if (!list) return;
+  if (!rows.length) return;
   list.innerHTML = rows.map(r => { const p=r[0]||"",h=r[1]||"",u=r[2]||"#",ic=r[4]||p.substring(0,2).toUpperCase(); return '<a href="'+u+'" target="_blank" class="contact-item"><div class="contact-icon">'+ic+'</div><div class="contact-info"><div class="contact-platform">'+p+'</div><div class="contact-handle">'+h+'</div></div></a>'; }).join("");
+}
+
+async function loadContact() {
+  return loadDataAndRender(GID.contact, renderContact);
 }
 
 function switchProfileInfo(name, el) {
@@ -179,12 +272,40 @@ function getYoutubeThumbnail(url) {
 }
 
 async function loadVideos() {
-  const rows = await fetchCSV(GID.videos);
-  const ytGrid = document.getElementById("yt-grid");
-  if (ytGrid && rows.length) ytGrid.innerHTML = rows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-link"><img src="'+getYoutubeThumbnail(url)+'" class="yt-thumb" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'">'+(title?'<div class="yt-title">'+title+'</div>':'')+'</a>'; }).join("");
-  const ytRows = await fetchCSV(GID.youtube);
-  const ytPageGrid = document.getElementById("yt-page-grid");
-  if (ytPageGrid && ytRows.length) ytPageGrid.innerHTML = ytRows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-card"><img src="'+getYoutubeThumbnail(url)+'" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"><div class="yt-card-title">'+title+'</div></a>'; }).join("");
+  const cacheKeyVideos = "csv_data_" + GID.videos;
+  const cacheKeyYoutube = "csv_data_" + GID.youtube;
+
+  function renderVids(rows) {
+    const ytGrid = document.getElementById("yt-grid");
+    if (ytGrid && rows.length) ytGrid.innerHTML = rows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-link"><img src="'+getYoutubeThumbnail(url)+'" class="yt-thumb" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'">'+(title?'<div class="yt-title">'+title+'</div>':'')+'</a>'; }).join("");
+  }
+
+  function renderYtPage(rows) {
+    const ytPageGrid = document.getElementById("yt-page-grid");
+    if (ytPageGrid && rows.length) ytPageGrid.innerHTML = rows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-card"><img src="'+getYoutubeThumbnail(url)+'" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"><div class="yt-card-title">'+title+'</div></a>'; }).join("");
+  }
+
+  // 1. Try cache first
+  try {
+    const cachedVids = localStorage.getItem(cacheKeyVideos);
+    if (cachedVids) renderVids(JSON.parse(cachedVids));
+  } catch(e) {}
+  try {
+    const cachedYt = localStorage.getItem(cacheKeyYoutube);
+    if (cachedYt) renderYtPage(JSON.parse(cachedYt));
+  } catch(e) {}
+
+  // 2. Fetch both in parallel
+  try {
+    const [rows, ytRows] = await Promise.all([
+      fetchCSV(GID.videos),
+      fetchCSV(GID.youtube)
+    ]);
+    if (rows && rows.length) renderVids(rows);
+    if (ytRows && ytRows.length) renderYtPage(ytRows);
+  } catch(e) {
+    console.warn("loadVideos network/render failed", e);
+  }
 }
 
 let scheduleEvents = [];
@@ -194,16 +315,18 @@ function formatDateKey(date) {
   return date.getFullYear()+"-"+String(date.getMonth()+1).padStart(2,'0')+"-"+String(date.getDate()).padStart(2,'0');
 }
 
-async function loadSchedule() {
-  const rows = await fetchCSV(GID.schedule);
+function renderSchedule(rows) {
   scheduleEvents = rows.filter(r => r[0]).map(r => ({ date:r[0],title:r[1]||'',location:(r[2]==='-'?'':r[2])||'',time:(r[3]==='-'?'':r[3])||'',livestream:(r[4]==='-'?'':r[4])||'',with:(r[5]==='-'?'':r[5])||'',note:(r[6]==='-'?'':r[6])||'' }));
   scheduleDates = [...new Set(scheduleEvents.map(e => e.date))];
   renderCalendar();
   if (selectedScheduleDate) showEvents(selectedScheduleDate);
 }
 
-async function loadRewards() {
-  const rows = await fetchCSV(GID.rewards);
+async function loadSchedule() {
+  return loadDataAndRender(GID.schedule, renderSchedule);
+}
+
+function renderRewards(rows) {
   const tbody = document.getElementById("rewards-list");
   const thead = document.getElementById("rewards-thead");
   if (!tbody) return;
@@ -212,6 +335,10 @@ async function loadRewards() {
   if (thead && hasEvent) thead.innerHTML = '<th>Award</th><th>Event</th><th>Date</th>';
   else if (thead) thead.innerHTML = '<th>Award</th><th>Date</th>';
   tbody.innerHTML = rows.map(r => hasEvent ? '<tr><td>'+(r[0]||'')+'</td><td>'+(r[2]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>' : '<tr><td>'+(r[0]||'')+'</td><td class="nowrap">'+(r[1]||'')+'</td></tr>').join("");
+}
+
+async function loadRewards() {
+  return loadDataAndRender(GID.rewards, renderRewards);
 }
 
 function closePopup() {}
@@ -276,11 +403,68 @@ function slideYt(dir) {
 
 async function init() {
   renderCalendar();
-  await Promise.all([loadConfig(),loadSlider(),loadWorks(),loadNews(),loadSocials(),loadVideos(),loadSchedule(),loadContact(),loadRewards()]);
-  requestAnimationFrame(equalizeProfileInfoHeight);
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(equalizeProfileInfoHeight);
-  const overlay=document.getElementById("loading-overlay");
-  if (overlay) { overlay.classList.add("is-hidden"); setTimeout(()=>overlay.hidden=true,300); }
+
+  const hasCache = (() => {
+    try {
+      return localStorage.getItem("csv_data_" + GID.config) &&
+             localStorage.getItem("csv_data_" + GID.schedule) &&
+             localStorage.getItem("csv_data_" + GID.slider);
+    } catch(e) {
+      return false;
+    }
+  })();
+
+  const hideOverlay = () => {
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay && !overlay.classList.contains("is-hidden")) {
+      overlay.classList.add("is-hidden");
+      setTimeout(() => overlay.hidden = true, 300);
+    }
+  };
+
+  if (hasCache) {
+    const overlay = document.getElementById("loading-overlay");
+    if (overlay) {
+      overlay.style.transition = "none";
+      overlay.classList.add("is-hidden");
+      overlay.hidden = true;
+    }
+  }
+
+  // Load Priority 1 tasks (either cache or fast network)
+  const p1Promises = [
+    loadConfig(),
+    loadSchedule(),
+    loadSlider()
+  ];
+
+  // Max 2 seconds timeout to hide overlay if no cache
+  const overlayTimeout = new Promise(resolve => setTimeout(resolve, 2000));
+
+  Promise.all(p1Promises).then(() => {
+    hideOverlay();
+  });
+
+  overlayTimeout.then(() => {
+    hideOverlay();
+  });
+
+  // Load remaining tasks in the background
+  const p2Promises = [
+    loadWorks(),
+    loadNews(),
+    loadSocials(),
+    loadVideos(),
+    loadContact(),
+    loadRewards()
+  ];
+
+  Promise.all([...p1Promises, ...p2Promises]).finally(() => {
+    requestAnimationFrame(equalizeProfileInfoHeight);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(equalizeProfileInfoHeight);
+    }
+  });
 }
 
 init();
