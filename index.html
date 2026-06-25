@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
   <title>Bonnie Official TH</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
   <div id="loading-overlay">
     <div class="spinner"></div>
@@ -25,7 +27,8 @@
       <a href="#" onclick="showPage('home',this)">HOME</a>
       <a href="#" onclick="showPage('youtube',this)">YOUTUBE CHANNEL</a>
       <a href="#" onclick="showPage('contact',this)">CONTACT US</a>
-      <a href="https://income-expenses-xi.vercel.app" target="_blank" rel="noopener noreferrer" onclick="showPage('income-expense',this)">INCOME-EXPENSE</a>
+      <a href="https://income-expenses-xi.vercel.app" target="_blank" rel="noopener noreferrer"
+        onclick="showPage('income-expense',this)">INCOME-EXPENSE</a>
       <a href="#" onclick="showPage('foodsupport',this)">FOODSUPPORT</a>
     </aside>
     <div class="content">
@@ -37,28 +40,121 @@
         </div>
         <div class="tab-content active" id="tab-profile">
           <div class="profile-header-row">
-            <div class="profile-slider-wrap">
-              <button class="profile-nav left" onclick="scrollProfile(-1)">&#8249;</button>
-              <div class="profile-slider" id="profile-slider"></div>
-              <button class="profile-nav right" onclick="scrollProfile(1)">&#8250;</button>
-            </div>
-            <div class="calendar-wrap">
-              <div class="cal-label">𝐁𝐨𝐧𝐧𝐢𝐞 𝐒𝐜𝐡𝐞𝐝𝐮𝐥𝐞</div>
-              <div class="calendar">
-                <div class="cal-header">
-                  <button class="cal-nav" onclick="changeMonth(-1)">&#8249;</button>
-                  <select id="cal-month" onchange="renderCalendar()">
-                    <option value="0">Jan</option><option value="1">Feb</option><option value="2">Mar</option>
-                    <option value="3">Apr</option><option value="4">May</option><option value="5">Jun</option>
-                    <option value="6">Jul</option><option value="7">Aug</option><option value="8">Sep</option>
-                    <option value="9">Oct</option><option value="10">Nov</option><option value="11">Dec</option>
-                  </select>
-                  <select id="cal-year" onchange="renderCalendar()">
-                    <option selected>2025</option><option>2026</option>
-                  </select>
-                  <button class="cal-nav" onclick="changeMonth(1)">&#8250;</button>
+            <section class="profile-card" aria-label="Bonnie profile">
+              <div class="profile-card-head">
+                <div class="profile-card-kicker"></div>
+                <h2>Bonnie - Pattraphus Borattasuwan</h2>
+              </div>
+              <div class="profile-card-body">
+                <figure class="profile-photo-frame">
+                  <img id="profile-photo" src="Picture/Profile_Bonnie_2_Thai.png" alt="Bonnie Pattraphus Borattasuwan">
+                </figure>
+                <div class="profile-info-panel">
+                  <div class="profile-info-tabs" role="tablist" aria-label="Profile details">
+                    <button class="profile-info-tab active" type="button"
+                      onclick="switchProfileInfo('about', this)">About Her</button>
+                    <button class="profile-info-tab" type="button"
+                      onclick="switchProfileInfo('food', this)">Food</button>
+                    <button class="profile-info-tab" type="button"
+                      onclick="switchProfileInfo('hobby', this)">Hobby</button>
+                  </div>
+                  <div class="profile-info-content active" id="profile-info-about">
+                    <div class="profile-list-block profile-about-block">
+                      <div class="about-column">
+                        <h3>ข้อมูลส่วนตัว / About Her</h3>
+                        <p><span>ชื่อ - นามสกุล</span><strong>ภัทราภัสร์ โบรัชตะสุวรรณ์</strong></p>
+                        <p><span>ชื่อเล่น</span><strong>บอนนี่</strong></p>
+                        <p><span>วันเกิด</span><strong>27 / มกราคม / 2547</strong></p>
+                        <p><span>ส่วนสูง</span><strong>164</strong></p>
+                        <p><span>น้ำหนัก</span><strong>48</strong></p>
+                        <p><span>ไซส์เสื้อ</span><strong>22222</strong></p>
+                        <p><span>ไซส์รองเท้า</span><strong>122222</strong></p>
+                        <p><span>ไซส์กางเกง</span><strong>122222</strong></p>
+                        <div class="about-color-row">
+                          <span>สีที่ชอบ</span>
+                          <div class="color-swatches"><i class="swatch black"></i><i class="swatch purple"></i><i
+                              class="swatch pink"></i></div>
+                        </div>
+                      </div>
+                      <div class="about-column">
+                        <h3>Profile</h3>
+                        <p><span>Name - Lastname</span><strong>Pattraphus Borattasuwan</strong></p>
+                        <p><span>Nickname</span><strong>Bonnie</strong></p>
+                        <p><span>Birthday</span><strong>27 / January / 2004</strong></p>
+                        <p><span>Height</span><strong>164</strong></p>
+                        <p><span>Weight</span><strong>48</strong></p>
+                        <p><span>Shirt Size</span><strong>22222</strong></p>
+                        <p><span>Shoes Size</span><strong>122222</strong></p>
+                        <p><span>Pant Size</span><strong>122222</strong></p>
+                        <div class="about-color-row">
+                          <span>Favorite Color</span>
+                          <div class="color-swatches"><i class="swatch black"></i><i class="swatch purple"></i><i
+                              class="swatch pink"></i></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="profile-info-content" id="profile-info-food">
+                    <div class="profile-list-block profile-detail-block">
+                      <div class="detail-column">
+                        <h3>อาหารที่ชอบ / Favorite Foods</h3>
+                        <p>ผลไม้ตระกูลเบอร์รี่ / Berries</p>
+                        <p>ซีฟู้ด / Seafood</p>
+                        <p>สลัดผัก / Salmon, Japanese foods</p>
+                      </div>
+                      <div class="detail-column">
+                        <h3>อาหารที่แพ้ / Food Allergies</h3>
+                        <p>เนื้อวัว / Beef</p>
+                        <p>นมวัว / Cow's Milk</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="profile-info-content" id="profile-info-hobby">
+                    <div class="profile-list-block profile-detail-block">
+                      <div class="detail-column">
+                        <h3>งานอดิเรก / Hobby</h3>
+                        <p>ดูหนังและซีรีส์ / Watching movies and series</p>
+                        <p>ฟังเพลง / Listening to music</p>
+                        <p>ถ่ายรูป / Taking photos</p>
+                      </div>
+                      <div class="detail-column">
+                        <h3>สิ่งที่สนใจ / Interests</h3>
+                        <p>แฟชั่น / Fashion</p>
+                        <p>การแสดง / Acting</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="cal-grid" id="cal-grid"></div>
+              </div>
+            </section>
+            <div class="calendar-section">
+              <div class="calendar-wrap">
+                <div class="cal-label">SCHEDULE</div>
+                <div class="calendar">
+                  <div class="cal-header">
+                    <button class="cal-nav" onclick="changeMonth(-1)">&#8249;</button>
+                    <select id="cal-month" onchange="renderCalendar()">
+                      <option value="0">Jan</option>
+                      <option value="1">Feb</option>
+                      <option value="2">Mar</option>
+                      <option value="3">Apr</option>
+                      <option value="4">May</option>
+                      <option value="5">Jun</option>
+                      <option value="6">Jul</option>
+                      <option value="7">Aug</option>
+                      <option value="8">Sep</option>
+                      <option value="9">Oct</option>
+                      <option value="10">Nov</option>
+                      <option value="11">Dec</option>
+                    </select>
+                    <select id="cal-year" onchange="renderCalendar()">
+                      <option selected>2025</option>
+                      <option>2026</option>
+                    </select>
+                    <button class="cal-nav" onclick="changeMonth(1)">&#8250;</button>
+                  </div>
+                  <div class="cal-grid" id="cal-grid"></div>
+                </div>
               </div>
             </div>
           </div>
@@ -71,17 +167,30 @@
               <div id="cal-popup-list"></div>
               <div class="cal-popup-notice">
                 งดติดตามศิลปินนอกเวลางาน ห้ามดักรอศิลปินบริเวณห้องพักหรือลานจอดรถ และตึกสังกัด<br>
-                <span>Please refrain from following the artists outside of work hours. Please do not wait for the artists near their residences, parking lots and company building.</span>
+                <span>Please refrain from following the artists outside of work hours. Please do not wait for the
+                  artists near their residences, parking lots and company building.</span>
               </div>
             </div>
           </div>
           <p class="bio-text" id="bio-text"></p>
           <div class="social-section">
             <div class="social-grid" id="social-grid">
-              <div><div class="s-name">IG</div><div class="social-thumb-wrap"></div></div>
-              <div><div class="s-name">X</div><div class="social-thumb-wrap"></div></div>
-              <div><div class="s-name">TIKTOK</div><div class="social-thumb-wrap"></div></div>
-              <div><div class="s-name">WEIBO</div><div class="social-thumb-wrap"></div></div>
+              <div>
+                <div class="s-name">IG</div>
+                <div class="social-thumb-wrap"></div>
+              </div>
+              <div>
+                <div class="s-name">X</div>
+                <div class="social-thumb-wrap"></div>
+              </div>
+              <div>
+                <div class="s-name">TIKTOK</div>
+                <div class="social-thumb-wrap"></div>
+              </div>
+              <div>
+                <div class="s-name">WEIBO</div>
+                <div class="social-thumb-wrap"></div>
+              </div>
             </div>
           </div>
           <div class="yt-section">
@@ -93,7 +202,9 @@
           </div>
         </div>
         <div class="tab-content" id="tab-news">
-          <div id="news-list"><div class="loading">กำลังโหลด...</div></div>
+          <div id="news-list">
+            <div class="loading">กำลังโหลด...</div>
+          </div>
         </div>
         <div class="tab-content" id="tab-series">
           <div class="works-grid" id="works-grid"></div>
@@ -101,81 +212,95 @@
         <div class="tab-content" id="tab-awards">
           <div id="rewards-wrap">
             <table class="rewards-table">
-              <thead><tr id="rewards-thead"><th>Award</th><th>Date</th></tr></thead>
-              <tbody id="rewards-list"><tr><td colspan="2" class="loading">กำลังโหลด...</td></tr></tbody>
+              <thead>
+                <tr id="rewards-thead">
+                  <th>Award</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="rewards-list">
+                <tr>
+                  <td colspan="2" class="loading">กำลังโหลด...</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       </div>
       <div id="page-youtube" hidden>
         <div class="yt-label">YOUTUBE</div>
-        <div class="yt-page-grid" id="yt-page-grid"><div class="loading">กำลังโหลด...</div></div>
+        <div class="yt-page-grid" id="yt-page-grid">
+          <div class="loading">กำลังโหลด...</div>
+        </div>
       </div>
       <div id="page-contact" hidden>
         <div class="contact-label">CONTACT US</div>
-        <div class="contact-list" id="contact-list"><div class="loading">กำลังโหลด...</div></div>
+        <div class="contact-list" id="contact-list">
+          <div class="loading">กำลังโหลด...</div>
+        </div>
       </div>
     </div>
   </div>
 
-      <!-- เริ่มโค้ด Footer -->
-    <footer class="custom-footer">
-        <div class="footer-container">
-            
-            <!-- คอลัมน์โซเชียลมีเดีย (ซ้ายสุด) -->
-            <div class="footer-socials">
-                <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
-                <a href="#" aria-label="Instagram)"><i class="fa-brands fa-instagram"></i></a>
-                <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
-                <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
-            </div>
+  <!-- เริ่มโค้ด Footer -->
+  <footer class="custom-footer">
+    <div class="footer-container">
 
-            <!-- คอลัมน์ USE CASES -->
-            <div class="footer-column">
-                <h3>Use Cases</h3>
-                <ul>
-                    <li><a href="#">UI design</a></li>
-                    <li><a href="#">UX design</a></li>
-                    <li><a href="#">Wireframing</a></li>
-                    <li><a href="#">Diagramming</a></li>
-                    <li><a href="#">Brainstorming</a></li>
-                    <li><a href="#">Online whiteboard</a></li>
-                    <li><a href="#">Team collaboration</a></li>
-                </ul>
-            </div>
+      <!-- คอลัมน์โซเชียลมีเดีย (ซ้ายสุด) -->
+      <div class="footer-socials">
+        <a href="#" aria-label="X (Twitter)"><i class="fa-brands fa-x-twitter"></i></a>
+        <a href="#" aria-label="Instagram)"><i class="fa-brands fa-instagram"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
 
-            <!-- คอลัมน์ EXPLORE -->
-            <div class="footer-column">
-                <h3>Explore</h3>
-                <ul>
-                    <li><a href="#">Design</a></li>
-                    <li><a href="#">Prototyping</a></li>
-                    <li><a href="#">Development features</a></li>
-                    <li><a href="#">Design systems</a></li>
-                    <li><a href="#">Collaboration features</a></li>
-                    <li><a href="#">Design process</a></li>
-                    <li><a href="#">FigJam</a></li>
-                </ul>
-            </div>
+      <!-- คอลัมน์ USE CASES -->
+      <div class="footer-column">
+        <h3>Use Cases</h3>
+        <ul>
+          <li><a href="#">UI design</a></li>
+          <li><a href="#">UX design</a></li>
+          <li><a href="#">Wireframing</a></li>
+          <li><a href="#">Diagramming</a></li>
+          <li><a href="#">Brainstorming</a></li>
+          <li><a href="#">Online whiteboard</a></li>
+          <li><a href="#">Team collaboration</a></li>
+        </ul>
+      </div>
 
-            <!-- คอลัมน์ RESOURCES -->
-            <div class="footer-column">
-                <h3>Resources</h3>
-                <ul>
-                    <li><a href="#">Blog</a></li>
-                    <li><a href="#">Best practices</a></li>
-                    <li><a href="#">Colors</a></li>
-                    <li><a href="#">Color wheel</a></li>
-                    <li><a href="#">Support</a></li>
-                    <li><a href="#">Developers</a></li>
-                    <li><a href="#">Resource library</a></li>
-                </ul>
-            </div>
+      <!-- คอลัมน์ EXPLORE -->
+      <div class="footer-column">
+        <h3>Explore</h3>
+        <ul>
+          <li><a href="#">Design</a></li>
+          <li><a href="#">Prototyping</a></li>
+          <li><a href="#">Development features</a></li>
+          <li><a href="#">Design systems</a></li>
+          <li><a href="#">Collaboration features</a></li>
+          <li><a href="#">Design process</a></li>
+          <li><a href="#">FigJam</a></li>
+        </ul>
+      </div>
 
-        </div>
-    </footer>
-    <!-- จบโค้ด Footer -->
+      <!-- คอลัมน์ RESOURCES -->
+      <div class="footer-column">
+        <h3>Resources</h3>
+        <ul>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Best practices</a></li>
+          <li><a href="#">Colors</a></li>
+          <li><a href="#">Color wheel</a></li>
+          <li><a href="#">Support</a></li>
+          <li><a href="#">Developers</a></li>
+          <li><a href="#">Resource library</a></li>
+        </ul>
+      </div>
 
-<script src="js/script.js"></script>
+    </div>
+  </footer>
+  <!-- จบโค้ด Footer -->
+
+  <script src="js/script.js"></script>
 </body>
+
 </html>
