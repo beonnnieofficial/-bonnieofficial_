@@ -85,6 +85,10 @@ html {
   display: none !important;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   font-family: var(--font-body);
   font-size: var(--text-md);
@@ -92,6 +96,7 @@ body {
   background: var(--color-page);
   min-height: 100vh;
   color: var(--color-text);
+  overflow-x: hidden;
 }
 
 button,
