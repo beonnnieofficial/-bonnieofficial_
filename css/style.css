@@ -1539,7 +1539,64 @@ textarea {
 
   .profile-about-block,
   .profile-detail-block {
+    grid-template-columns: 1fr;
+    gap: 18px;
     max-width: 720px;
+    min-height: 0;
+  }
+
+  .about-column+.about-column,
+  .detail-column+.detail-column {
+    border-left: 0;
+    padding-left: 0;
+  }
+
+  .profile-list-block h3 {
+    font-size: var(--text-sm);
+  }
+
+  .profile-list-block p,
+  .about-color-row,
+  .profile-detail-block p {
+    margin-left: 0;
+  }
+
+  .profile-about-block p {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .profile-about-block p strong {
+    align-self: stretch;
+    padding-bottom: 4px;
+    width: auto;
+  }
+
+  .profile-about-block p span,
+  .about-color-row>span {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    white-space: nowrap;
+    width: auto;
+    transform: translateY(0);
+    box-shadow: 0 3px 0 #b38df7;
+  }
+
+  .about-color-row {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .color-swatches {
+    flex-wrap: nowrap;
+    gap: 10px;
   }
 
   .calendar-section .calendar-wrap {
