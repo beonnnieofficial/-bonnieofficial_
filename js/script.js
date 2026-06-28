@@ -245,7 +245,7 @@ function renderSeriesStats() {
 
   statsBoard.innerHTML = `
     <div class="series-stat-col">
-      <div class="series-stat-icon"><i class="fa-solid fa-clapperboard"></i></div>
+      <div class="series-stat-icon"><i class="fa-regular fa-clapperboard"></i></div>
       <div class="series-stat-num">${totalWorks}</div>
       <div class="series-stat-label">Works</div>
     </div>
@@ -260,7 +260,12 @@ function renderSeriesStats() {
       <div class="series-stat-label">Supporting Role</div>
     </div>
     <div class="series-stat-col">
-      <div class="series-stat-icon"><i class="fa-regular fa-calendar"></i></div>
+      <div class="series-stat-icon">
+        <div class="calendar-question-icon">
+          <i class="fa-regular fa-calendar"></i>
+          <span class="question-mark">?</span>
+        </div>
+      </div>
       <div class="series-stat-num">${upcoming}</div>
       <div class="series-stat-label">Upcoming</div>
     </div>

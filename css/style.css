@@ -1290,7 +1290,7 @@ textarea {
 
 /* Series Revamp Layout */
 #tab-series,
-#tab-series * {
+#tab-series *:not(i):not([class*="fa-"]) {
   font-family: "LINE Seed Sans TH", sans-serif !important;
 }
 
@@ -1358,6 +1358,27 @@ textarea {
   font-size: 1.15rem;
   color: var(--color-primary);
   margin-bottom: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+}
+
+.calendar-question-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-question-icon .question-mark {
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--color-primary);
 }
 
 .series-stat-num {
@@ -1503,7 +1524,7 @@ textarea {
   font-size: 11px;
   font-weight: 700;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 20px;
   height: 30px;
   padding: 0 16px;
   transition: all 0.2s ease;
