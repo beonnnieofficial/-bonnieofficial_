@@ -245,7 +245,14 @@ function renderSeriesStats() {
 
   statsBoard.innerHTML = `
     <div class="series-stat-col">
-      <div class="series-stat-icon"><i class="fa-regular fa-clapperboard"></i></div>
+      <div class="series-stat-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block;">
+          <path d="M2 3h20v4H2z"></path>
+          <path d="M2 7v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7"></path>
+          <path d="M6 7l3-4M11 7l3-4M16 7l3-4"></path>
+          <path d="M10 11l5 3-5 3z" fill="currentColor"></path>
+        </svg>
+      </div>
       <div class="series-stat-num">${totalWorks}</div>
       <div class="series-stat-label">Works</div>
     </div>
