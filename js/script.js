@@ -141,21 +141,192 @@ function startSlider() {
   box.addEventListener("mouseup", e => { if (!dragging) return; dragging=false; const diff=mouseStartX-e.clientX; if (Math.abs(diff)>40) { clearInterval(sliderTimer); goSlide(sliderIndex+(diff>0?1:-1)); startSlider(); } });
 }
 
-function getWorksThumbnail(imageUrl, link) {
-  if (imageUrl) { const vid=imageUrl.match(/(?:v=|youtu\.be\/|live\/)([a-zA-Z0-9_-]{11})/); if (vid) return "https://img.youtube.com/vi/"+vid[1]+"/maxresdefault.jpg"; if (imageUrl.includes("drive.google.com")) return convertDriveUrl(imageUrl); if (imageUrl.includes("lh3.googleusercontent.com")) return imageUrl; }
-  if (link) { const vid=link.match(/(?:v=|youtu\.be\/|live\/)([a-zA-Z0-9_-]{11})/); if (vid) return "https://img.youtube.com/vi/"+vid[1]+"/maxresdefault.jpg"; }
-  return imageUrl ? convertDriveUrl(imageUrl) : "";
+const seriesData = [
+  {
+    title: "Us รักของเรา (Dokrak)",
+    year: "2025",
+    role: "Main Role",
+    image: "https://drive.google.com/file/d/12lIyWRLK0O1iFP1L3qMQIdk9Th6JwjJG/view?usp=drive_link",
+    watch: "https://youtu.be/1EauB0mRMGo?si=V4Qyc9bWZ4E5vwuB",
+    trailer: "https://youtu.be/E2KFC2etiWc?si=F2VLBdmCrYcwCGAn"
+  },
+  {
+    title: "Me and Thee (Lookplub)",
+    year: "2025",
+    role: "Support Role",
+    image: "https://drive.google.com/file/d/1zcvyxseqir_zmjy80IqDSIex1t4pkjyQ/view?usp=drive_link",
+    watch: "https://youtu.be/87ZIk_zLP34?si=v_WpvXnOODFwOYKD",
+    trailer: "https://youtu.be/PXqpISTPse8?si=UpfrfsFT4B_dubX4"
+  },
+  {
+    title: "Peach and Me (Lookplub)",
+    year: "2026",
+    role: "Support Role",
+    image: "https://drive.google.com/file/d/1SSYfrjnjnL-KnbFIeRH8DrMYCa-483ZO/view?usp=drive_link",
+    watch: "",
+    trailer: "https://youtu.be/YbFd6ZTFQ9g?si=AB7NQ68qWT6Odpj6"
+  },
+  {
+    title: "Moon Shadow (Key)",
+    year: "Upcoming",
+    role: "Main Role",
+    image: "https://drive.google.com/file/d/1K2XKuMqpNS87UzfGJEy39zb84DQlweL1/view?usp=drive_link",
+    watch: "",
+    trailer: "https://youtu.be/LMKBoo8bvaw?si=zX-KQ21o5McNJu_Q"
+  },
+  {
+    title: "Girl Rules (Baipor)",
+    year: "2026",
+    role: "Support Role",
+    image: "https://drive.google.com/file/d/1Yqxb6bKXySHjBByzzQkr7_83l6ndNq1a/view?usp=drive_link",
+    watch: "",
+    trailer: "https://youtu.be/lDUD3omAlHA?si=v7aZsNULrgbGzpSs",
+    imageStyle: "object-position: 30% center;"
+  },
+  {
+    title: "High School Frenemy (Peeta)",
+    year: "2024",
+    role: "Support Role",
+    image: "https://drive.google.com/file/d/16wvUoCwGzvFEq2Jv66oChFEelrbEem3K/view?usp=drive_link",
+    watch: "https://youtu.be/sJ0VRF8L5HI?si=VrHYdQWK0wbViqVc",
+    trailer: "https://youtu.be/z0Svp4enGDc?si=p8wZZIR7fnMhG1tG"
+  }
+];
+
+let activeSeriesFilter = "All";
+
+function showToast(msg) {
+  const oldToast = document.getElementById("custom-toast");
+  if (oldToast) oldToast.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "custom-toast";
+  toast.style.position = "fixed";
+  toast.style.bottom = "24px";
+  toast.style.left = "50%";
+  toast.style.transform = "translateX(-50%) translateY(20px)";
+  toast.style.background = "rgba(147, 51, 234, 0.95)";
+  toast.style.color = "#ffffff";
+  toast.style.padding = "10px 20px";
+  toast.style.borderRadius = "30px";
+  toast.style.fontSize = "12px";
+  toast.style.fontWeight = "700";
+  toast.style.zIndex = "9999";
+  toast.style.boxShadow = "0 8px 24px rgba(123, 44, 191, 0.35)";
+  toast.style.transition = "transform 0.3s ease, opacity 0.3s ease";
+  toast.style.opacity = "0";
+  toast.style.pointerEvents = "none";
+  toast.style.whiteSpace = "nowrap";
+  toast.style.backdropFilter = "blur(4px)";
+  toast.textContent = msg;
+
+  document.body.appendChild(toast);
+
+  requestAnimationFrame(() => {
+    toast.style.transform = "translateX(-50%) translateY(0)";
+    toast.style.opacity = "1";
+  });
+
+  setTimeout(() => {
+    toast.style.transform = "translateX(-50%) translateY(20px)";
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
 }
 
-function renderWorks(rows) {
-  const grid = document.getElementById("works-grid");
+function renderSeriesStats() {
+  const statsBoard = document.getElementById("series-stats-board");
+  if (!statsBoard) return;
+
+  const totalWorks = seriesData.length;
+  const mainRoles = seriesData.filter(s => s.role === "Main Role").length;
+  const supportRoles = seriesData.filter(s => s.role === "Support Role").length;
+  const upcoming = seriesData.filter(s => s.year === "Upcoming").length;
+
+  statsBoard.innerHTML = `
+    <div class="series-stat-col">
+      <div class="series-stat-icon"><i class="fa-solid fa-clapperboard"></i></div>
+      <div class="series-stat-num">${totalWorks}</div>
+      <div class="series-stat-label">Works</div>
+    </div>
+    <div class="series-stat-col">
+      <div class="series-stat-icon"><i class="fa-regular fa-star"></i></div>
+      <div class="series-stat-num">${mainRoles}</div>
+      <div class="series-stat-label">Main Roles</div>
+    </div>
+    <div class="series-stat-col">
+      <div class="series-stat-icon"><i class="fa-regular fa-heart"></i></div>
+      <div class="series-stat-num">${supportRoles}</div>
+      <div class="series-stat-label">Supporting Role</div>
+    </div>
+    <div class="series-stat-col">
+      <div class="series-stat-icon"><i class="fa-regular fa-calendar"></i></div>
+      <div class="series-stat-num">${upcoming}</div>
+      <div class="series-stat-label">Upcoming</div>
+    </div>
+  `;
+}
+
+function renderSeriesFilters() {
+  const filterBar = document.getElementById("series-filter-bar");
+  if (!filterBar) return;
+
+  const filters = ["All", "Main Role", "Support Role"];
+  filterBar.innerHTML = filters.map(f => {
+    const activeClass = f === activeSeriesFilter ? "active" : "";
+    return `<button class="series-filter-btn ${activeClass}" onclick="setSeriesFilter('${f}')">${f}</button>`;
+  }).join("");
+}
+
+function setSeriesFilter(filter) {
+  activeSeriesFilter = filter;
+  renderSeriesFilters();
+  renderSeriesCards();
+}
+
+function renderSeriesCards() {
+  const grid = document.getElementById("series-grid");
   if (!grid) return;
-  if (!rows.length) { grid.innerHTML = ""; return; }
-  grid.innerHTML = rows.map(r => { const title=r[0]||"", imageUrl=r[1]||"", link=r[2]||"#", thumb=getWorksThumbnail(imageUrl,link), id=(link.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||"", onerror=id?' onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"':''; return '<div class="work-item"><a href="'+link+'" target="_blank"><img src="'+thumb+'" alt="'+title+'"'+onerror+'></a><div class="work-title">'+title+'</div></div>'; }).join("");
+
+  const filtered = seriesData.filter(s => {
+    if (activeSeriesFilter === "All") return true;
+    return s.role === activeSeriesFilter;
+  });
+
+  grid.innerHTML = filtered.map(s => {
+    const watchAttr = s.watch ? `href="${s.watch}" target="_blank"` : `href="javascript:void(0)" onclick="showToast('ผลงานนี้ยังไม่เปิดให้รับชม / Streaming link coming soon')"`;
+    const trailerAttr = s.trailer ? `href="${s.trailer}" target="_blank"` : `href="javascript:void(0)" onclick="showToast('ทีเซอร์ยังไม่เปิดเผย / Teaser not yet available')"`;
+
+    return `
+      <div class="series-card">
+        <div class="series-card-photo">
+          <img src="${convertDriveUrl(s.image)}" alt="${s.title}" loading="lazy" ${s.imageStyle ? `style="${s.imageStyle}"` : ""}>
+        </div>
+        <div class="series-card-details">
+          <h3 class="series-card-title">${s.title}</h3>
+          <div class="series-card-meta">
+            <span class="series-card-year">${s.year}</span>
+            <span class="series-card-dot">•</span>
+            <span class="series-card-role-badge">${s.role}</span>
+          </div>
+          <div class="series-card-buttons">
+            <a ${watchAttr}>
+              <i class="fa-solid fa-play"></i> Watch
+            </a>
+            <a ${trailerAttr}>
+              Trailer
+            </a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 async function loadWorks() {
-  return loadDataAndRender(GID.works, renderWorks);
+  renderSeriesStats();
+  renderSeriesFilters();
+  renderSeriesCards();
 }
 
 function renderNews(rows) {
