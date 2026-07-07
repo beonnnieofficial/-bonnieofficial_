@@ -25,14 +25,39 @@
   </nav>
   <div class="main">
     <aside class="sidebar">
-      <a href="#" onclick="showPage('home',this)" class="active-menu"><span>HOME</span></a>
-      <a href="#" onclick="showPage('youtube',this)"><span>YOUTUBE CHANNEL</span></a>
-      <a href="#" onclick="showPage('gallery',this)"><span>GALLERY</span></a>
-      <a href="#" onclick="showPage('contact',this)"><span>CONTACT US</span></a>
+      <a href="#" onclick="showPage('home',this)" class="active-menu">
+        <i class="fa-solid fa-house"></i>
+        <span>HOME</span>
+      </a>
+      <a href="#" onclick="showPage('youtube',this)">
+        <i class="fa-brands fa-youtube"></i>
+        <span>YOUTUBE</span>
+      </a>
+      <a href="#" onclick="showPage('gallery',this)">
+        <i class="fa-solid fa-image"></i>
+        <span>GALLERY</span>
+      </a>
+      <a href="#" onclick="showPage('contact',this)">
+        <i class="fa-solid fa-envelope"></i>
+        <span>CONTACT US</span>
+      </a>
       <a href="https://income-expenses-mocha.vercel.app/" target="_blank" rel="noopener noreferrer"
-        onclick="showPage('income-expense',this)"><span>INCOME-EXPENSE</span></a>
+        onclick="showPage('income-expense',this)">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+        <span>INCOME-EXPENSE</span>
+      </a>
       <a href="https://bonnie-food-suport.vercel.app/queue" target="_blank" rel="noopener noreferrer"
-        onclick="showPage('foodsupport',this)"><span>FOODSUPPORT</span></a>
+        onclick="showPage('foodsupport',this)">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="svg-food-support">
+          <path d="M18.8 3.3a.6.6 0 0 0-.6-.3h-1.2a.6.6 0 0 0-.6.6v.3h.8l1 3.1h1.1L18.8 3.3z"></path>
+          <rect x="13.5" y="7.5" width="7.5" height="1.5" rx="0.5"></rect>
+          <path d="M14.2 9.5l.8 9.2c.1.8.8 1.3 1.5 1.3h2c.7 0 1.4-.5 1.5-1.3l.8-9.2H14.2z"></path>
+          <path d="M1.5 13.5c0-2.5 2-4.5 4.5-4.5h2.5c2.5 0 4.5 2 4.5 4.5v.5h-11.5v-.5z"></path>
+          <rect x="0.5" y="15" width="12.5" height="1.8" rx="0.9"></rect>
+          <path d="M1.5 18h10.5v1.5c0 1.1-.9 2-2 2h-6.5c-1.1 0-2-.9-2-2V18z"></path>
+        </svg>
+        <span>FOOD SUPPORT</span>
+      </a>
     </aside>
     <div class="content">
       <div id="page-home">
