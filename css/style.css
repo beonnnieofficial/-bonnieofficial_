@@ -1459,17 +1459,10 @@ textarea {
 .series-card {
   display: flex;
   background: #ffffff;
-  border: 1.5px solid rgba(172, 105, 217, 0.35);
+  border: 0;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 6px 16px rgba(172, 105, 217, 0.25);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-}
-
-.series-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(172, 105, 217, 0.85);
-  box-shadow: none;
+  box-shadow: 0 0 18px rgba(172, 105, 217, 0.45);
 }
 
 .series-card-photo {
