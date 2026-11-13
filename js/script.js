@@ -146,7 +146,7 @@ const seriesData = [
     title: "Us รักของเรา (Dokrak)",
     year: "2025",
     role: "Main Role",
-    image: "https://drive.google.com/file/d/12lIyWRLK0O1iFP1L3qMQIdk9Th6JwjJG/view?usp=drive_link",
+    image: "Picture/opt/Dokruk.jpg",
     watch: "https://youtu.be/1EauB0mRMGo?si=V4Qyc9bWZ4E5vwuB",
     trailer: "https://youtu.be/E2KFC2etiWc?si=F2VLBdmCrYcwCGAn"
   },
@@ -154,7 +154,7 @@ const seriesData = [
     title: "Me and Thee (Lookplub)",
     year: "2025",
     role: "Support Role",
-    image: "https://drive.google.com/file/d/1zcvyxseqir_zmjy80IqDSIex1t4pkjyQ/view?usp=drive_link",
+    image: "Picture/opt/Lookplub.jpg",
     watch: "https://youtu.be/87ZIk_zLP34?si=v_WpvXnOODFwOYKD",
     trailer: "https://youtu.be/PXqpISTPse8?si=UpfrfsFT4B_dubX4"
   },
@@ -162,7 +162,7 @@ const seriesData = [
     title: "Peach and Me (Lookplub)",
     year: "2026",
     role: "Support Role",
-    image: "https://drive.google.com/file/d/1SSYfrjnjnL-KnbFIeRH8DrMYCa-483ZO/view?usp=drive_link",
+    image: "Picture/opt/Lookplub_1.jpg",
     watch: "",
     trailer: "https://youtu.be/YbFd6ZTFQ9g?si=AB7NQ68qWT6Odpj6"
   },
@@ -170,7 +170,7 @@ const seriesData = [
     title: "Moon Shadow (Key)",
     year: "Upcoming",
     role: "Main Role",
-    image: "https://drive.google.com/file/d/1K2XKuMqpNS87UzfGJEy39zb84DQlweL1/view?usp=drive_link",
+    image: "Picture/opt/Key.jpeg",
     watch: "",
     trailer: "https://youtu.be/LMKBoo8bvaw?si=zX-KQ21o5McNJu_Q"
   },
@@ -178,7 +178,7 @@ const seriesData = [
     title: "Girl Rules (Baipor)",
     year: "2026",
     role: "Support Role",
-    image: "https://drive.google.com/file/d/1Yqxb6bKXySHjBByzzQkr7_83l6ndNq1a/view?usp=drive_link",
+    image: "Picture/opt/Baipor.jpeg",
     watch: "",
     trailer: "https://youtu.be/lDUD3omAlHA?si=v7aZsNULrgbGzpSs",
     imageStyle: "object-position: 30% center;"
@@ -187,7 +187,7 @@ const seriesData = [
     title: "High School Frenemy (Peeta)",
     year: "2024",
     role: "Support Role",
-    image: "https://drive.google.com/file/d/16wvUoCwGzvFEq2Jv66oChFEelrbEem3K/view?usp=drive_link",
+    image: "Picture/opt/Peeta.jpg",
     watch: "https://youtu.be/sJ0VRF8L5HI?si=VrHYdQWK0wbViqVc",
     trailer: "https://youtu.be/z0Svp4enGDc?si=p8wZZIR7fnMhG1tG"
   }
@@ -458,14 +458,24 @@ async function loadVideos() {
   const cacheKeyVideos = "csv_data_" + GID.videos;
   const cacheKeyYoutube = "csv_data_" + GID.youtube;
 
+  function filterVideos(rows) {
+    return (rows || []).filter(r => {
+      const url = r[0] || "";
+      const title = r[1] || "";
+      return !title.includes("เงาใต้พระจันทร์ Moonshadow | GMMTV 2026") && !url.includes("LMKBoo8bvaw");
+    });
+  }
+
   function renderVids(rows) {
     const ytGrid = document.getElementById("yt-grid");
-    if (ytGrid && rows.length) ytGrid.innerHTML = rows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-link"><img src="'+getYoutubeThumbnail(url)+'" class="yt-thumb" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'">'+(title?'<div class="yt-title">'+title+'</div>':'')+'</a>'; }).join("");
+    const validRows = filterVideos(rows);
+    if (ytGrid && validRows.length) ytGrid.innerHTML = validRows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-link"><img src="'+getYoutubeThumbnail(url)+'" class="yt-thumb" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'">'+(title?'<div class="yt-title">'+title+'</div>':'')+'</a>'; }).join("");
   }
 
   function renderYtPage(rows) {
     const ytPageGrid = document.getElementById("yt-page-grid");
-    if (ytPageGrid && rows.length) ytPageGrid.innerHTML = rows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-card"><img src="'+getYoutubeThumbnail(url)+'" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"><div class="yt-card-title">'+title+'</div></a>'; }).join("");
+    const validRows = filterVideos(rows);
+    if (ytPageGrid && validRows.length) ytPageGrid.innerHTML = validRows.map(r => { const url=r[0]||"",title=r[1]||"",id=(url.match(/(?:v=|youtu\.be\/|live\/)([^&?\/]+)/)||[])[1]||""; return '<a href="'+url+'" target="_blank" class="yt-card"><img src="'+getYoutubeThumbnail(url)+'" alt="'+title+'" onerror="this.onerror=null;this.src=\'https://img.youtube.com/vi/'+id+'/hqdefault.jpg\'"><div class="yt-card-title">'+title+'</div></a>'; }).join("");
   }
 
   // 1. Try cache first

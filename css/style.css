@@ -1466,11 +1466,13 @@ textarea {
 }
 
 .series-card-photo {
-  width: 140px;
+  width: 144px;
+  height: 192px;
   flex-shrink: 0;
-  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--color-placeholder);
+  border-radius: 16px 0 0 16px;
+  transform: translateZ(0);
 }
 
 .series-card-photo img {
@@ -1478,6 +1480,11 @@ textarea {
   height: 100%;
   object-fit: cover;
   display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  transform: translateZ(0);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .series-card-details {
@@ -2173,7 +2180,9 @@ textarea {
   }
 
   .series-card-photo {
-    width: 110px;
+    width: 120px;
+    height: 160px;
+    border-radius: 12px 0 0 12px;
   }
 
   .series-card-details {
